@@ -5,6 +5,10 @@ function Level(tower, size) {
   this.highlight = false;
   this.selected = false;
 
+  this.setTower = (tower) => {
+    this.tower = tower;
+  };
+
 }
 
 function Tower(position) {
@@ -24,11 +28,22 @@ function Tower(position) {
     drawTower(ctx, this);
   };
 
+  this.popLevel = () => {
+    return this.levels.pop();
+  };
+
+  this.addLevel = (level) => {
+    level.setTower(this, this.levels.length);
+    this.levels.push(level);
+  };
+
 }
 
 function Game() {
 
   window.game = this;
+
+  /* CONSTRUCTOR */
 
   this.root = document.getElementById('game');
   this.canvas = document.createElement('canvas');
@@ -44,6 +59,9 @@ function Game() {
 
   this.towers = [];
   this.selectedLevel = null;
+  this.animation = null;
+
+  /* GAME */
 
   this.initialize = () => {
     const { width, height } = this.canvas;
@@ -73,13 +91,27 @@ function Game() {
   };
 
   this.frame = () => {
-    this.update();
     this.clear();
     this.draw();
   };
 
+  /* RENDERING */
+
   this.clear = () => {
-    this.context.clearRect(0, 0, this.width, this.height);
+    const { width, height } = this.canvas;
+
+    this.context.clearRect(0, 0, width, height);
+  };
+
+  this.resetHighlight = () => {
+    for (let i = 0; i < 3; ++i) {
+      const tower = this.towers[i];
+
+      tower.highlight = false;
+
+      for (let j = 0; j < tower.levels.length; ++j)
+        tower.levels[j].highlight = false;
+    }
   };
 
   this.draw = () => {
@@ -90,9 +122,7 @@ function Game() {
       this.towers[i].draw(this.context);
   };
 
-  this.update = () => {
-
-  };
+  /* ACCESSORS */
 
   this.getTowerAt = (x, y) => {
     for (let i = 0; i < 3; ++i) {
@@ -126,40 +156,110 @@ function Game() {
     return null;
   };
 
-  this.resetHighlight = () => {
-    for (let i = 0; i < 3; ++i) {
-      const tower = this.towers[i];
+  /* VALIDATION */
 
-      tower.highlight = false;
+  this.canSelectLevel = (level) => {
+    if (this.selectedLevel)
+      return level === this.selectedLevel;
 
-      for (let j = 0; j < tower.levels.length; ++j)
-        tower.levels[j].highlight = false;
-    }
+    const tower = level.tower;
+
+    if (!tower)
+      return false;
+
+    const idx = tower.levels.indexOf(level);
+
+    return idx === tower.levels.length - 1;
   };
 
-  this.onClick = (e) => {
-    const level = this.getLevelAt(e.offsetX, e.offsetY);
+  this.canSelectTower = (tower) => {
+    if (!this.selectedLevel)
+      return false;
 
-    if (level) {
-      if (level.selected) {
-        level.selected = false;
-        this.selectedLevel = null;
+    if (tower === this.selectedLevel.tower)
+      return false;
+
+    return true;
+  };
+
+  /* ANIMATION */
+
+  this.animate = (fromTower, toTower) => {
+    const level = fromTower.popLevel();
+
+    this.animation = {
+      step: 0,
+      fromTower,
+      toTower,
+      level,
+    };
+
+    level.tower = null;
+
+    const frame = () => {
+      this.animation.step += 0.05;
+
+      if (this.animation.step < 1) {
+        requestAnimationFrame(frame);
       } else {
-        level.selected = true;
-        this.selectedLevel = level;
+        this.endAnimate();
       }
+    };
+
+    requestAnimationFrame(frame);
+  };
+
+  this.endAnimate = () => {
+    if (!this.animation)
+      return;
+
+    const { fromTower, toTower, level } = this.animation;
+
+    toTower.addLevel(level);
+
+    this.selectedLevel.selected = false;
+    this.selectedLevel = null;
+    this.animation = null;
+  };
+
+  /* EVENTS */
+
+  this.onClick = (e) => {
+    if (this.animation)
+      return;
+
+    const level = this.getLevelAt(e.offsetX, e.offsetY);
+    const tower = this.getTowerAt(e.offsetX, e.offsetY);
+
+    if (level && this.canSelectLevel(level)) {
+      level.selected = !level.selected;
+
+      if (level.selected) {
+        this.selectedLevel = level;
+        console.log('level selected', level);
+      } else {
+        this.selectedLevel = null;
+        console.log('level unselected');
+      }
+
+    } else if (tower && this.canSelectTower(tower)) {
+      this.animate(this.selectedLevel.tower, tower);
+      console.log('tower selected', tower);
     }
   };
 
   this.onMouseMove = (e) => {
+    if (this.animation)
+      return;
+
     const tower = this.getTowerAt(e.offsetX, e.offsetY);
     const level = this.getLevelAt(e.offsetX, e.offsetY);
 
     this.resetHighlight();
 
-    if (!this.selectedLevel && level) {
+    if (level && this.canSelectLevel(level)) {
       level.highlight = true;
-    } else if (this.selectedLevel && tower && this.selectedLevel.tower !== tower) {
+    } else if (tower && this.canSelectTower(tower)) {
       tower.highlight = true;
     }
   };
