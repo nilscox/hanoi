@@ -1,0 +1,22 @@
+body {
+  font-family: monospace;
+}
+
+h1 {
+  font-size: 1.6em;
+  font-weight: bold;
+  margin: 25px 0 15px 0;
+  color: #333;
+  text-align: center;
+}
+
+hr {
+  border-color: #FFF;
+}
+
+#game {
+  width: 620px;
+  height: 280px;
+  margin: 50px auto;
+  background-color: #333;
+}
