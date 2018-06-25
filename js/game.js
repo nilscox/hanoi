@@ -42,15 +42,14 @@ function Game() {
 
   this.root.appendChild(this.canvas);
 
-  this.dimensions = {
-    width: this.canvas.width,
-    height: this.canvas.height,
-  };
-
   this.towers = [];
   this.selectedLevel = null;
 
   this.initialize = () => {
+    const { width, height } = this.canvas;
+
+    compute.setDimensions(width, height);
+
     this.towers.splice(0, 3);
 
     for (let i = 0; i < 3; ++i)
@@ -99,7 +98,7 @@ function Game() {
     for (let i = 0; i < 3; ++i) {
       const tower = this.towers[i];
 
-      const towerRect = compute.towerRect(this.dimensions, tower);
+      const towerRect = compute.towerRect(tower);
 
       if (compute.inBounds({ x, y }, towerRect))
         return tower;
@@ -117,7 +116,7 @@ function Game() {
 
       for (let j = 0; j < tower.levels.length; ++j) {
         const level = tower.levels[j];
-        const levelRect = compute.levelRect(this.dimensions, level, j);
+        const levelRect = compute.levelRect(level, j);
 
         if (compute.inBounds({ x, y }, levelRect))
           return level;

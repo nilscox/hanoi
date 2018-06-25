@@ -26,7 +26,7 @@ function drawLevel(ctx, level, i) {
     color = color.tint(50);
   }
 
-  drawRect(ctx, compute.levelRect(ctx.canvas, level, i), color.hexString());
+  drawRect(ctx, compute.levelRect(level, i), color.hexString());
 }
 
 function drawTower(ctx, tower) {
@@ -35,8 +35,8 @@ function drawTower(ctx, tower) {
   if (tower.highlight)
     color = color.tint(30);
 
-  drawRect(ctx, compute.poleRect(ctx.canvas, tower), color.hexString());
-  drawRect(ctx, compute.baseRect(ctx.canvas, tower), color.hexString());
+  drawRect(ctx, compute.poleRect(tower), color.hexString());
+  drawRect(ctx, compute.baseRect(tower), color.hexString());
 
   tower.levels.forEach((l, i) => drawLevel(ctx, l, i));
 }
