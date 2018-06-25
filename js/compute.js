@@ -131,6 +131,49 @@ const compute = {
     };
   },
 
+  animatedLevelRect: function animatedLevelRect(level, animation) {
+    const { fromTower, toTower, step } = animation;
+
+    const towerWidth = compute.towerWidth();
+    const levelWidth = compute.levelWidth(level);
+    const fromTowerRect = compute.towerRect(fromTower);
+    const toTowerRect = compute.towerRect(toTower);
+
+    const result = {
+      width: levelWidth,
+      height: LEVEL_HEIGHT,
+    }
+
+    if (step < 1/3 || step > 2/3) {
+      const tower = step < 1/3 ? fromTower : toTower;
+      let a = dimensions.height - GAME_SPACING - BASE_HEIGHT - (tower.levels.length + 1) * (LEVEL_HEIGHT + LEVEL_SPACING);
+      let b = 20;
+      let f = step * 3;
+
+      if (tower === toTower) {
+        b = [a, a = b][0];
+        f -= 2;
+      }
+
+      result.x = GAME_SPACING + (towerWidth - levelWidth) / 2 + tower.position * (towerWidth + 2 * TOWER_SPACING);
+      result.y = (b - a) * f + a;
+    } else {
+      let a = fromTowerRect.x + towerWidth / 2 - levelWidth / 2;
+      let b = toTowerRect.x + towerWidth / 2 - levelWidth / 2;
+      let f = step * 3 - 1;
+
+      if (a > b) {
+        b = [a, a = b][0];
+        f = -f + 1;
+      }
+
+      result.x = (b - a) * f + a;
+      result.y = 20;
+    }
+
+    return result;
+  },
+
   /**
    * Check if a bonding box contains a point
    *
@@ -145,6 +188,6 @@ const compute = {
       p.y >= bounds.y,
       p.y <= bounds.y + bounds.height,
     ].indexOf(false) < 0;
-  }
+  },
 
 };

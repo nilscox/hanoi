@@ -37,6 +37,8 @@ function drawTower(ctx, tower) {
 
   drawRect(ctx, compute.poleRect(tower), color.hexString());
   drawRect(ctx, compute.baseRect(tower), color.hexString());
+}
 
-  tower.levels.forEach((l, i) => drawLevel(ctx, l, i));
+function drawAnimatedLevel(ctx, level, animation) {
+  drawRect(ctx, compute.animatedLevelRect(level, animation), COLORS[level.size].hexString());
 }
