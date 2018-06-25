@@ -1,3 +1,6 @@
+/**
+ * An instance of a level
+ */
 function Level(tower, size) {
 
   this.tower = tower;
@@ -11,6 +14,9 @@ function Level(tower, size) {
 
 }
 
+/**
+ * Tower data structure.
+ */
 function Tower(position) {
 
   this.position = position;
@@ -39,6 +45,13 @@ function Tower(position) {
 
 }
 
+/**
+ * Game data structure.
+ *
+ * This is the core data structure. It should be instanciated only once in the
+ * app. It will add the <canvas /> tag as a child of the #game element in the
+ * DOM. The #game element must initially exist in the document.
+ */
 function Game() {
 
   window.game = this;
@@ -63,6 +76,9 @@ function Game() {
 
   /* GAME */
 
+  /**
+   * Initialize the game
+   */
   this.initialize = () => {
     const { width, height } = this.canvas;
 
@@ -79,6 +95,9 @@ function Game() {
     console.log('Hanoi is ready to start', this);
   };
 
+  /**
+   * Start the game
+   */
   this.start = () => {
     const ctx = this.context;
 
@@ -90,6 +109,9 @@ function Game() {
     requestAnimationFrame(loop);
   };
 
+  /**
+   * Redraw the canvas
+   */
   this.frame = () => {
     this.clear();
     this.draw();
@@ -97,12 +119,18 @@ function Game() {
 
   /* RENDERING */
 
+  /**
+   * Clear the canvas
+   */
   this.clear = () => {
     const { width, height } = this.canvas;
 
     this.context.clearRect(0, 0, width, height);
   };
 
+  /**
+   * Unhighlight all elements
+   */
   this.resetHighlight = () => {
     for (let i = 0; i < 3; ++i) {
       const tower = this.towers[i];
@@ -114,6 +142,9 @@ function Game() {
     }
   };
 
+  /**
+   * Draw all game elements
+   */
   this.draw = () => {
     this.context.strokeStyle = '#000000';
     this.context.lineWidth = 0.5;
@@ -124,6 +155,14 @@ function Game() {
 
   /* ACCESSORS */
 
+  /**
+   * Find the tower at a given coordinate
+   *
+   * @param {number} x - the x coordinate
+   * @param {number} y - the y coordinate
+   * @returns {?Tower} - the tower which bounding box contains the point
+   *   coordinates, or `null` if no tower matches this point
+   */
   this.getTowerAt = (x, y) => {
     for (let i = 0; i < 3; ++i) {
       const tower = this.towers[i];
@@ -137,6 +176,14 @@ function Game() {
     return null;
   };
 
+  /**
+   * Find the level at a given coordinate
+   *
+   * @param {number} x - the x coordinate
+   * @param {number} y - the y coordinate
+   * @returns {?Tower} - the level which bounding box contains the point
+   *   coordinates, or `null` if no level matches this point
+   */
   this.getLevelAt = (x, y) => {
     for (let i = 0; i < 3; ++i) {
       const tower = this.towers[i];
@@ -158,6 +205,12 @@ function Game() {
 
   /* VALIDATION */
 
+  /**
+   * Check if the user can select a level
+   *
+   * @param {Level} level - the level to validate
+   * @returns {boolean} - true if the user can select this level
+   */
   this.canSelectLevel = (level) => {
     if (this.selectedLevel)
       return level === this.selectedLevel;
@@ -172,6 +225,12 @@ function Game() {
     return idx === tower.levels.length - 1;
   };
 
+  /**
+   * Check if the user can select a tower
+   *
+   * @param {Tower} tower - the tower to validate
+   * @returns {boolean} - true if the user can select this tower
+   */
   this.canSelectTower = (tower) => {
     if (!this.selectedLevel)
       return false;
@@ -184,6 +243,12 @@ function Game() {
 
   /* ANIMATION */
 
+  /**
+   * Animate a level from a tower to another
+   *
+   * @param {Tower} fromTower - the tower for which the level animates from
+   * @param {Tower} toTower - the tower for which the level animates to
+   */
   this.animate = (fromTower, toTower) => {
     const level = fromTower.popLevel();
 
@@ -209,6 +274,9 @@ function Game() {
     requestAnimationFrame(frame);
   };
 
+  /**
+   * End the level animation
+   */
   this.endAnimate = () => {
     if (!this.animation)
       return;
@@ -224,6 +292,11 @@ function Game() {
 
   /* EVENTS */
 
+  /**
+   * Handle an event when the user clicks on the canvas
+   *
+   * @param {Event} e - the event
+   */
   this.onClick = (e) => {
     if (this.animation)
       return;
@@ -248,6 +321,11 @@ function Game() {
     }
   };
 
+  /**
+   * Handle an event when the user moves the mouse on the canvas
+   *
+   * @param {Event} e - the event
+   */
   this.onMouseMove = (e) => {
     if (this.animation)
       return;
@@ -264,6 +342,9 @@ function Game() {
     }
   };
 
+  /**
+   * Handle an event when the user moves the mouse away from the canvas
+   */
   this.onMouseOut = () => {
     this.resetHighlight();
   };
