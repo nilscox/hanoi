@@ -22,6 +22,12 @@ const dimensions = {
  *   width: number,
  *   height: number,
  * }
+ *
+ * Animation = {
+ *   fromTower: Tower,
+ *   toTower: Tower,
+ *   step: number,
+ * }
  */
 const compute = {
 
@@ -131,6 +137,12 @@ const compute = {
     };
   },
 
+  /**
+   * Compute an animated level's rect.
+   *
+   * @param {Level} level - the animated level
+   * @param {Animation} animation - the animation object
+   */
   animatedLevelRect: function animatedLevelRect(level, animation) {
     const { fromTower, toTower, step } = animation;
 
@@ -147,7 +159,7 @@ const compute = {
     if (step < 1/3 || step > 2/3) {
       const tower = step < 1/3 ? fromTower : toTower;
       let a = dimensions.height - GAME_SPACING - BASE_HEIGHT - (tower.levels.length + 1) * (LEVEL_HEIGHT + LEVEL_SPACING);
-      let b = 20;
+      let b = LEVEL_ANIMATION_SPACING;
       let f = step * 3;
 
       if (tower === toTower) {
@@ -168,7 +180,7 @@ const compute = {
       }
 
       result.x = (b - a) * f + a;
-      result.y = 20;
+      result.y = LEVEL_ANIMATION_SPACING;
     }
 
     return result;

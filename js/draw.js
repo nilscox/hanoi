@@ -6,6 +6,7 @@ const BASE_HEIGHT = 5;
 const LEVEL_HEIGHT = 25;
 const LEVEL_SPACING = 5;
 const LEVEL_MIN_WIDTH = 20;
+const LEVEL_ANIMATION_SPACING = 20;
 
 const COLORS = [null, '#F9F', '#FF9', '#99F', '#9F9', '#F99']
   .map(c => new Values(c));
