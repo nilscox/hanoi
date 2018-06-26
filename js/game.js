@@ -1,5 +1,5 @@
 /**
- * An instance of a level
+ * A level
  */
 function Level(tower, size) {
 
@@ -57,15 +57,9 @@ function Game(root) {
 
   /* CONSTRUCTOR */
 
-  this.root = root;
-  this.canvas = document.createElement('canvas');
-  this.context = this.canvas.getContext('2d');
-  this.canvas.width = this.root.clientWidth;
-  this.canvas.height = this.root.clientHeight;
-
+  this.canvas = createCanvas(root);
   this.canvas.addEventListener('click', (e) => this.onClick(e));
-
-  this.root.appendChild(this.canvas);
+  this.context = this.canvas.getContext('2d');
 
   this.towers = [];
   this.selectedLevel = null;

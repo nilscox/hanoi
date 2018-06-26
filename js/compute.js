@@ -1,15 +1,20 @@
-const dimensions = {
+/**
+  * Global dimensions definition.
+  *
+  * This global declaration allows to set the dimensions once when the game
+  * starts, and every time the canvas gets resized.
+  */
+const g_dimensions = {
   width: 0,
   height: 0,
 };
 
 /**
- * Object of functions to abstract game objects positions and dimensions
- * computation
+ * Object of functions to abstract all game computations
  *
+ * A "Rect" is the smallest bounding box in which an object can fit.
  * A "pole" represents the vertical bar of a tower.
  * A "base" represents the horizontal bar of a tower.
- * A "Rect" is the smallest bounding box in which an object can fit.
  *
  * Point = {
  *   x: number,
@@ -38,8 +43,8 @@ const compute = {
    * @param {height} number - the canvas height
    */
   setDimensions: function setDimensions(width, height) {
-    dimensions.width = width;
-    dimensions.height = height;
+    g_dimensions.width = width;
+    g_dimensions.height = height;
   },
 
   /**
@@ -48,7 +53,7 @@ const compute = {
    * @returns {number} - a tower's width, in px
    */
   towerWidth: function towerWidth() {
-    return dimensions.width / 3 - 2 * TOWER_SPACING;
+    return g_dimensions.width / 3 - 2 * TOWER_SPACING;
   },
 
   /**
@@ -78,7 +83,7 @@ const compute = {
       x: GAME_SPACING + towerWidth / 2 - POLE_WIDTH / 2 + pos * (towerWidth + 2 * TOWER_SPACING),
       y: GAME_SPACING + TOP_SPACING,
       width: POLE_WIDTH,
-      height: dimensions.height - TOP_SPACING - 2 * GAME_SPACING,
+      height: g_dimensions.height - TOP_SPACING - 2 * GAME_SPACING,
     };
   },
 
@@ -94,7 +99,7 @@ const compute = {
 
     return {
       x: GAME_SPACING + pos * (towerWidth + 2 * TOWER_SPACING),
-      y: dimensions.height - GAME_SPACING - BASE_HEIGHT,
+      y: g_dimensions.height - GAME_SPACING - BASE_HEIGHT,
       width: towerWidth,
       height: BASE_HEIGHT,
     };
@@ -131,14 +136,14 @@ const compute = {
 
     return {
       x: GAME_SPACING + (towerWidth - levelWidth) / 2 + level.tower.position * (towerWidth + 2 * TOWER_SPACING),
-      y: dimensions.height - GAME_SPACING - BASE_HEIGHT - (i + 1) * (LEVEL_HEIGHT + LEVEL_SPACING),
+      y: g_dimensions.height - GAME_SPACING - BASE_HEIGHT - (i + 1) * (LEVEL_HEIGHT + LEVEL_SPACING),
       width: levelWidth,
       height: LEVEL_HEIGHT,
     };
   },
 
   /**
-   * Compute an animated level's rect.
+   * Compute an animated level's rect. This function is aweful.
    *
    * @param {Level} level - the animated level
    * @param {Animation} animation - the animation object
@@ -158,7 +163,7 @@ const compute = {
 
     if (step < 1/3 || step > 2/3) {
       const tower = step < 1/3 ? fromTower : toTower;
-      let a = dimensions.height - GAME_SPACING - BASE_HEIGHT - (tower.levels.length + 1) * (LEVEL_HEIGHT + LEVEL_SPACING);
+      let a = g_dimensions.height - GAME_SPACING - BASE_HEIGHT - (tower.levels.length + 1) * (LEVEL_HEIGHT + LEVEL_SPACING);
       let b = LEVEL_ANIMATION_SPACING;
       let f = step * 3;
 

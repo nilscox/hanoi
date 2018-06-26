@@ -15,8 +15,11 @@ hr {
 }
 
 #game {
-  width: 620px;
-  height: 280px;
-  margin: 50px auto;
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+#game canvas {
   background-color: #333;
 }
