@@ -103,10 +103,11 @@ function Game(root) {
     const { context: ctx } = this;
     const { width, height } = this.canvas;
 
-    this.context.clearRect(0, 0, width, height);
+    console.log(width, height);
+    ctx.clearRect(0, 0, width, height);
 
-    this.context.strokeStyle = '#000000';
-    this.context.lineWidth = 0.5;
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 0.5;
 
     for (let i = 0; i < 3; ++i) {
       const tower = this.towers[i];
@@ -118,7 +119,7 @@ function Game(root) {
     }
 
     if (this.animation)
-      drawAnimatedLevel(this.context, this.selectedLevel, this.animation);
+      drawAnimatedLevel(ctx, this.selectedLevel, this.animation);
   };
 
   /* ACCESSORS */

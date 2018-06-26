@@ -46,6 +46,10 @@ function drawRect(ctx, r, fillStyle) {
     ctx.fillStyle = fillStyle;
 
   ctx.fillRect(r.x, r.y, r.width, r.height);
+
+  ctx.beginPath();
+  ctx.rect(r.x, r.y, r.width, r.height);
+  ctx.stroke();
 }
 
 /**
