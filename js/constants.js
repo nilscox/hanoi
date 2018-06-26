@@ -1,5 +1,6 @@
 /** CONSTANTS DEFINITION */
 
+const TOWER_NB_LAYERS = 6;
 const GAME_WIDTH = 620;
 const GAME_HEIGHT = 280;
 const GAME_SPACING = 10;
@@ -11,6 +12,7 @@ const LAYER_HEIGHT = 25;
 const LAYER_SPACING = 5;
 const LAYER_MIN_WIDTH = 20;
 const LAYER_ANIMATION_SPACING = 20;
-const LAYERS_COLORS = buildColorPalette();
+const LAYERS_COLORS = buildColorPalette(TOWER_NB_LAYERS);
 const SELECTED_LAYER_COLOR = getRandomColor().tint(30);
 const TOWER_COLOR = new Values('#666');
+const ANIMATION_SPEED = 6;

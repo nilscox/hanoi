@@ -14,13 +14,14 @@ function getRandomColor() {
 /**
  * Creates a beautiful color palette
  *
+ * @param {number} n - the palette's size
  * @returns {Array<Values>} - the color palette
  */
-function buildColorPalette() {
+function buildColorPalette(n) {
   const colors = [];
   const baseColor = getRandomColor().hexString();
 
-  for (let i = 0; i < 5; ++i) {
+  for (let i = 0; i < n; ++i) {
     colors.push(new Values(baseColor).shade(i * 10));
   }
 

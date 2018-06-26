@@ -1,5 +1,5 @@
 /**
- * A layer
+ * Layer
  */
 function Layer(tower, size) {
 
@@ -7,20 +7,21 @@ function Layer(tower, size) {
   this.size = size;
   this.selected = false;
 
-  this.setTower = (tower) => {
-    this.tower = tower;
-  };
-
 }
 
 /**
- * Tower data structure.
+ * Tower
  */
 function Tower(position) {
 
   this.position = position;
   this.layers = [];
 
+  /**
+   * Fills the tower with some layers
+   *
+   * @param {number} n - the amount of layers to fill
+   */
   this.fill = (n) => {
     this.layers.splice(0, this.layers.length);
 
@@ -28,34 +29,47 @@ function Tower(position) {
       this.layers.push(new Layer(this, n - i));
   };
 
+  /**
+   * Adds a layer to the tower
+   *
+   * @param {Layer} layer - the layer to add
+   */
+  this.addLayer = (layer) => {
+    layer.tower = this;
+    this.layers.push(layer);
+  };
+
+  /**
+   * Removes the tower's top layer
+   *
+   * @returns {Layer} - the top layer
+   */
   this.popLayer = () => {
     return this.layers.pop();
   };
 
-  this.addLayer = (layer) => {
-    layer.setTower(this, this.layers.length);
-    this.layers.push(layer);
-  };
-
+  /**
+   * Retrieve the tower's top layer
+   *
+   * @returns {Layer} - the top layer if any, or null otherwise
+   */
   this.getTopLayer = () => {
-    if (this.layers.length > 0)
-      return this.layers[this.layers.length - 1];
+    if (this.layers.length === 0)
+      return null;
+
+    return this.layers[this.layers.length - 1];
   }
 
 }
 
 /**
- * Game data structure.
- *
- * This is the core data structure. It should be instanciated only once in the
- * app. It will add the <canvas /> tag as a child of the #game element in the
- * DOM. The #game element must initially exist in the document.
+ * Game
  */
 function Game(root) {
 
   window.game = this;
 
-  /* CONSTRUCTOR */
+  /** CONSTRUCTOR */
 
   this.canvas = createCanvas(root);
   this.canvas.addEventListener('click', (e) => this.onClick(e));
@@ -65,23 +79,22 @@ function Game(root) {
   this.selectedLayer = null;
   this.animation = null;
 
-  /* GAME */
+  /** INITIALIZATION */
 
   /**
-   * Initialize the game
+   * Initializes the game
    */
   this.initialize = () => {
     const { width, height } = this.canvas;
 
-    compute.setDimensions(width, height);
+    setDimensions(width, height);
 
     this.towers.splice(0, 3);
 
     for (let i = 0; i < 3; ++i)
       this.towers.push(new Tower(i));
 
-    // this.towers[parseInt(Math.random() * 3)].fill(5);
-    this.towers[0].fill(5);
+    this.towers[parseInt(Math.random() * 3)].fill(TOWER_NB_LAYERS);
 
     this.redraw();
 
@@ -91,16 +104,15 @@ function Game(root) {
   /* RENDERING */
 
   /**
-   * Draw all game elements
+   * Clears the canvas and draw all game elements
    */
   this.redraw = () => {
-    const { context: ctx } = this;
-    const { width, height } = this.canvas;
+    const ctx = this.context;
+    const width = this.canvas.width;
+    const height = this.canvas.height;
 
     ctx.clearRect(0, 0, width, height);
-
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 0.5;
+    ctx.strokeStyle = '#00000099';
 
     for (let i = 0; i < 3; ++i) {
       const tower = this.towers[i];
@@ -118,7 +130,7 @@ function Game(root) {
   /* ACCESSORS */
 
   /**
-   * Find the tower at a given coordinate
+   * Finds the tower at a given coordinate
    *
    * @param {number} x - the x coordinate
    * @param {number} y - the y coordinate
@@ -131,15 +143,16 @@ function Game(root) {
 
       const towerRect = compute.towerRect(tower);
 
-      if (compute.inBounds({ x, y }, towerRect))
+      if (compute.inBounds({ x, y }, towerRect)) {
         return tower;
+      }
     }
 
     return null;
   };
 
   /**
-   * Find the layer at a given coordinate
+   * Finds the layer at a given coordinate
    *
    * @param {number} x - the x coordinate
    * @param {number} y - the y coordinate
@@ -150,15 +163,13 @@ function Game(root) {
     for (let i = 0; i < 3; ++i) {
       const tower = this.towers[i];
 
-      if (tower.layers.length === 0)
-        continue;
-
       for (let j = 0; j < tower.layers.length; ++j) {
         const layer = tower.layers[j];
         const layerRect = compute.layerRect(layer, j);
 
-        if (compute.inBounds({ x, y }, layerRect))
+        if (compute.inBounds({ x, y }, layerRect)) {
           return layer;
+        }
       }
     }
 
@@ -168,10 +179,10 @@ function Game(root) {
   /* VALIDATION */
 
   /**
-   * Check if the user can select a layer
+   * Checks if the user can select a layer
    *
    * @param {Layer} layer - the layer to validate
-   * @returns {boolean} - true if the user can select this layer
+   * @returns {boolean} - true only if the user can select this layer
    */
   this.canSelectLayer = (layer) => {
     if (this.selectedLayer)
@@ -188,7 +199,7 @@ function Game(root) {
   };
 
   /**
-   * Check if the user can select a tower
+   * Checks if the user can select a tower
    *
    * @param {Tower} tower - the tower to validate
    * @returns {boolean} - true if the user can select this tower
@@ -199,16 +210,16 @@ function Game(root) {
     if (!this.selectedLayer || tower === this.selectedLayer.tower)
       return false;
 
-    if (topLayer)
-      return topLayer.size > this.selectedLayer.size;
+    if (!topLayer)
+      return true;
 
-    return true;
+    return topLayer.size > this.selectedLayer.size;
   };
 
   /* ANIMATION */
 
   /**
-   * Animate a layer from a tower to another
+   * Animates a layer from a tower to another
    *
    * @param {Tower} fromTower - the tower for which the layer animates from
    * @param {Tower} toTower - the tower for which the layer animates to
@@ -226,7 +237,7 @@ function Game(root) {
     layer.tower = null;
 
     const frame = () => {
-      this.animation.step += 0.05;
+      this.animation.step += 0.01 * ANIMATION_SPEED;
       this.redraw();
 
       if (this.animation.step < 1) {
@@ -240,13 +251,15 @@ function Game(root) {
   };
 
   /**
-   * End the layer animation
+   * Ends the layer animation
    */
   this.endAnimate = () => {
     if (!this.animation)
       return;
 
-    const { fromTower, toTower, layer } = this.animation;
+    const fromTower = this.animation.fromTower;
+    const toTower = this.animation.toTower;
+    const layer = this.animation.layer;
 
     toTower.addLayer(layer);
 
@@ -260,7 +273,7 @@ function Game(root) {
   /* EVENTS */
 
   /**
-   * Handle an event when the user clicks on the canvas
+   * Handles a canvas's onclick event
    *
    * @param {Event} e - the event
    */
@@ -276,7 +289,7 @@ function Game(root) {
 
       if (layer.selected) {
         this.selectedLayer = layer;
-        console.log('layer selected', layer);
+        console.log('layer selected: ' + layer.size);
       } else {
         this.selectedLayer = null;
         console.log('layer unselected');
@@ -284,7 +297,7 @@ function Game(root) {
 
     } else if (tower && this.canSelectTower(tower)) {
       this.animate(this.selectedLayer.tower, tower);
-      console.log('tower selected', tower);
+      console.log('tower selected: ' + tower.position);
     }
 
     this.redraw();

@@ -1,20 +1,9 @@
 /**
-  * Global dimensions definition.
-  *
-  * This global declaration allows to set the dimensions once when the game
-  * starts, and every time the canvas gets resized.
-  */
-const g_dimensions = {
-  width: 0,
-  height: 0,
-};
-
-/**
- * Object of functions to abstract all game computations
+ * Game calculations abstraction functions
  *
- * A "Rect" is the smallest bounding box in which an object can fit.
- * A "pole" represents the vertical bar of a tower.
- * A "base" represents the horizontal bar of a tower.
+ * A "Rect" is the smallest bounding box in which an object can fit
+ * A "pole" represents the vertical bar of a tower
+ * A "base" represents the horizontal bar of a tower
  *
  * Point = {
  *   x: number,
@@ -34,43 +23,55 @@ const g_dimensions = {
  *   step: number,
  * }
  */
+
+/**
+  * Global dimensions definition
+  *
+  * This global declaration allows to set the dimensions once when the game
+  * starts, and every time the canvas gets resized
+  */
+const g_dimensions = {
+  width: 0,
+  height: 0,
+};
+
+/**
+ * Register the drawing canvas's dimensions
+ *
+ * @param {width} number - the canvas width
+ * @param {height} number - the canvas height
+ */
+function setDimensions(width, height) {
+  g_dimensions.width = width;
+  g_dimensions.height = height;
+}
+
 const compute = {
 
   /**
-   * Compute the with of a tower.
+   * Computes a tower's width
    *
-   * @param {width} number - the canvas width
-   * @param {height} number - the canvas height
-   */
-  setDimensions: function setDimensions(width, height) {
-    g_dimensions.width = width;
-    g_dimensions.height = height;
-  },
-
-  /**
-   * Compute the with of a tower.
-   *
-   * @returns {number} - a tower's width, in px
+   * @returns {number} - a tower's width
    */
   towerWidth: function towerWidth() {
     return g_dimensions.width / 3 - 2 * TOWER_SPACING;
   },
 
   /**
-   * Compute the with of a layer.
+   * Computes a layer's width
    *
    * @param {Layer} layer - the layer
-   * @returns {number} - the layer's width, in px
+   * @returns {number} - the layer's width
    */
   layerWidth: function layerWidth(layer) {
-    const ratio = layer.size / 5;
+    const ratio = layer.size / TOWER_NB_LAYERS;
     const towerWidth = compute.towerWidth();
 
     return (towerWidth - LAYER_MIN_WIDTH) * ratio + LAYER_MIN_WIDTH;
   },
 
   /**
-   * Compute a pole's rect.
+   * Computes a tower pole's rect
    *
    * @param {Tower} tower - the tower
    * @returns {Rect} - the tower's pole rect
@@ -88,7 +89,7 @@ const compute = {
   },
 
   /**
-   * Compute a base's rect.
+   * Computes a tower base's rect
    *
    * @param {Tower} tower - the tower
    * @returns {Rect} - the tower's base rect
@@ -106,7 +107,7 @@ const compute = {
   },
 
   /**
-   * Compute a tower's rect.
+   * Computes a tower's rect
    *
    * @param {Tower} tower - the tower
    * @returns {Rect} - the tower's rect
@@ -124,7 +125,7 @@ const compute = {
   },
 
   /**
-   * Compute a layer's rect.
+   * Computes a layer's rect
    *
    * @param {Layer} layer - the layer
    * @param {number} i - the position of the layer in the tower
@@ -143,7 +144,7 @@ const compute = {
   },
 
   /**
-   * Compute an animated layer's rect. This function is aweful.
+   * Computes an animated layer's rect (this function is aweful)
    *
    * @param {Layer} layer - the animated layer
    * @param {Animation} animation - the animation object
@@ -192,7 +193,7 @@ const compute = {
   },
 
   /**
-   * Check if a bonding box contains a point
+   * Checks if a bonding box contains a point
    *
    * @param {Point} p - the point to check
    * @param {bounds} React - the bounding box
