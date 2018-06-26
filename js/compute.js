@@ -59,7 +59,7 @@ const compute = {
   /**
    * Compute the with of a layer.
    *
-   * @param {Level} layer - the layer
+   * @param {Layer} layer - the layer
    * @returns {number} - the layer's width, in px
    */
   layerWidth: function layerWidth(layer) {
@@ -126,7 +126,7 @@ const compute = {
   /**
    * Compute a layer's rect.
    *
-   * @param {Level} layer - the layer
+   * @param {Layer} layer - the layer
    * @param {number} i - the position of the layer in the tower
    * @returns {Rect} - the layer's rect
    */
@@ -145,10 +145,10 @@ const compute = {
   /**
    * Compute an animated layer's rect. This function is aweful.
    *
-   * @param {Level} layer - the animated layer
+   * @param {Layer} layer - the animated layer
    * @param {Animation} animation - the animation object
    */
-  animatedLevelRect: function animatedLevelRect(layer, animation) {
+  animatedLayerRect: function animatedLayerRect(layer, animation) {
     const { fromTower, toTower, step } = animation;
 
     const towerWidth = compute.towerWidth();

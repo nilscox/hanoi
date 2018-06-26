@@ -64,10 +64,10 @@ function drawRect(ctx, r, fill) {
  * Draws a layer attached to a tower
  *
  * @param {Contex2D} ctx - the drawing context
- * @param {Level} layer - the layer to draw
+ * @param {Layer} layer - the layer to draw
  * @param {number} i - the layer's position in the tower
  */
-function drawLevel(ctx, layer, i) {
+function drawLayer(ctx, layer, i) {
   let color = LAYERS_COLORS[layer.size - 1];
 
   if (layer.selected) {
@@ -92,9 +92,9 @@ function drawTower(ctx, tower) {
  * Draws a layer during an animation
  *
  * @param {Context2D} ctx - the drawing context
- * @param {Level} layer - the layer to draw
+ * @param {Layer} layer - the layer to draw
  * @param {Animation} animation - the animation object
  */
-function drawAnimatedLevel(ctx, layer, animation) {
-  drawRect(ctx, compute.animatedLevelRect(layer, animation), SELECTED_LAYER_COLOR);
+function drawAnimatedLayer(ctx, layer, animation) {
+  drawRect(ctx, compute.animatedLayerRect(layer, animation), SELECTED_LAYER_COLOR);
 }
