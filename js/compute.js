@@ -57,16 +57,16 @@ const compute = {
   },
 
   /**
-   * Compute the with of a level.
+   * Compute the with of a layer.
    *
-   * @param {Level} level - the level
-   * @returns {number} - the level's width, in px
+   * @param {Level} layer - the layer
+   * @returns {number} - the layer's width, in px
    */
-  levelWidth: function levelWidth(level) {
-    const ratio = level.size / 5;
+  layerWidth: function layerWidth(layer) {
+    const ratio = layer.size / 5;
     const towerWidth = compute.towerWidth();
 
-    return (towerWidth - LEVEL_MIN_WIDTH) * ratio + LEVEL_MIN_WIDTH;
+    return (towerWidth - LAYER_MIN_WIDTH) * ratio + LAYER_MIN_WIDTH;
   },
 
   /**
@@ -124,47 +124,47 @@ const compute = {
   },
 
   /**
-   * Compute a level's rect.
+   * Compute a layer's rect.
    *
-   * @param {Level} level - the level
-   * @param {number} i - the position of the level in the tower
-   * @returns {Rect} - the level's rect
+   * @param {Level} layer - the layer
+   * @param {number} i - the position of the layer in the tower
+   * @returns {Rect} - the layer's rect
    */
-  levelRect: function levelRect(level, i) {
+  layerRect: function layerRect(layer, i) {
     const towerWidth = compute.towerWidth();
-    const levelWidth = compute.levelWidth(level);
+    const layerWidth = compute.layerWidth(layer);
 
     return {
-      x: GAME_SPACING + (towerWidth - levelWidth) / 2 + level.tower.position * (towerWidth + 2 * TOWER_SPACING),
-      y: g_dimensions.height - GAME_SPACING - BASE_HEIGHT - (i + 1) * (LEVEL_HEIGHT + LEVEL_SPACING),
-      width: levelWidth,
-      height: LEVEL_HEIGHT,
+      x: GAME_SPACING + (towerWidth - layerWidth) / 2 + layer.tower.position * (towerWidth + 2 * TOWER_SPACING),
+      y: g_dimensions.height - GAME_SPACING - BASE_HEIGHT - (i + 1) * (LAYER_HEIGHT + LAYER_SPACING),
+      width: layerWidth,
+      height: LAYER_HEIGHT,
     };
   },
 
   /**
-   * Compute an animated level's rect. This function is aweful.
+   * Compute an animated layer's rect. This function is aweful.
    *
-   * @param {Level} level - the animated level
+   * @param {Level} layer - the animated layer
    * @param {Animation} animation - the animation object
    */
-  animatedLevelRect: function animatedLevelRect(level, animation) {
+  animatedLevelRect: function animatedLevelRect(layer, animation) {
     const { fromTower, toTower, step } = animation;
 
     const towerWidth = compute.towerWidth();
-    const levelWidth = compute.levelWidth(level);
+    const layerWidth = compute.layerWidth(layer);
     const fromTowerRect = compute.towerRect(fromTower);
     const toTowerRect = compute.towerRect(toTower);
 
     const result = {
-      width: levelWidth,
-      height: LEVEL_HEIGHT,
+      width: layerWidth,
+      height: LAYER_HEIGHT,
     }
 
     if (step < 1/3 || step > 2/3) {
       const tower = step < 1/3 ? fromTower : toTower;
-      let a = g_dimensions.height - GAME_SPACING - BASE_HEIGHT - (tower.levels.length + 1) * (LEVEL_HEIGHT + LEVEL_SPACING);
-      let b = LEVEL_ANIMATION_SPACING;
+      let a = g_dimensions.height - GAME_SPACING - BASE_HEIGHT - (tower.layers.length + 1) * (LAYER_HEIGHT + LAYER_SPACING);
+      let b = LAYER_ANIMATION_SPACING;
       let f = step * 3;
 
       if (tower === toTower) {
@@ -172,11 +172,11 @@ const compute = {
         f -= 2;
       }
 
-      result.x = GAME_SPACING + (towerWidth - levelWidth) / 2 + tower.position * (towerWidth + 2 * TOWER_SPACING);
+      result.x = GAME_SPACING + (towerWidth - layerWidth) / 2 + tower.position * (towerWidth + 2 * TOWER_SPACING);
       result.y = (b - a) * f + a;
     } else {
-      let a = fromTowerRect.x + towerWidth / 2 - levelWidth / 2;
-      let b = toTowerRect.x + towerWidth / 2 - levelWidth / 2;
+      let a = fromTowerRect.x + towerWidth / 2 - layerWidth / 2;
+      let b = toTowerRect.x + towerWidth / 2 - layerWidth / 2;
       let f = step * 3 - 1;
 
       if (a > b) {
@@ -185,7 +185,7 @@ const compute = {
       }
 
       result.x = (b - a) * f + a;
-      result.y = LEVEL_ANIMATION_SPACING;
+      result.y = LAYER_ANIMATION_SPACING;
     }
 
     return result;

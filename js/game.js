@@ -1,5 +1,5 @@
 /**
- * A level
+ * A layer
  */
 function Level(tower, size) {
 
@@ -19,27 +19,27 @@ function Level(tower, size) {
 function Tower(position) {
 
   this.position = position;
-  this.levels = [];
+  this.layers = [];
 
   this.fill = (n) => {
-    this.levels.splice(0, this.levels.length);
+    this.layers.splice(0, this.layers.length);
 
     for (let i = 0; i < n; ++i)
-      this.levels.push(new Level(this, n - i));
+      this.layers.push(new Level(this, n - i));
   };
 
   this.popLevel = () => {
-    return this.levels.pop();
+    return this.layers.pop();
   };
 
-  this.addLevel = (level) => {
-    level.setTower(this, this.levels.length);
-    this.levels.push(level);
+  this.addLevel = (layer) => {
+    layer.setTower(this, this.layers.length);
+    this.layers.push(layer);
   };
 
   this.getTopLevel = () => {
-    if (this.levels.length > 0)
-      return this.levels[this.levels.length - 1];
+    if (this.layers.length > 0)
+      return this.layers[this.layers.length - 1];
   }
 
 }
@@ -97,7 +97,6 @@ function Game(root) {
     const { context: ctx } = this;
     const { width, height } = this.canvas;
 
-    console.log(width, height);
     ctx.clearRect(0, 0, width, height);
 
     ctx.strokeStyle = '#000000';
@@ -108,8 +107,8 @@ function Game(root) {
 
       drawTower(ctx, tower);
 
-      for (let i = 0; i < tower.levels.length; ++i)
-        drawLevel(ctx, tower.levels[i], i);
+      for (let i = 0; i < tower.layers.length; ++i)
+        drawLevel(ctx, tower.layers[i], i);
     }
 
     if (this.animation)
@@ -140,26 +139,26 @@ function Game(root) {
   };
 
   /**
-   * Find the level at a given coordinate
+   * Find the layer at a given coordinate
    *
    * @param {number} x - the x coordinate
    * @param {number} y - the y coordinate
-   * @returns {?Tower} - the level which bounding box contains the point
-   *   coordinates, or `null` if no level matches this point
+   * @returns {?Tower} - the layer which bounding box contains the point
+   *   coordinates, or `null` if no layer matches this point
    */
   this.getLevelAt = (x, y) => {
     for (let i = 0; i < 3; ++i) {
       const tower = this.towers[i];
 
-      if (tower.levels.length === 0)
+      if (tower.layers.length === 0)
         continue;
 
-      for (let j = 0; j < tower.levels.length; ++j) {
-        const level = tower.levels[j];
-        const levelRect = compute.levelRect(level, j);
+      for (let j = 0; j < tower.layers.length; ++j) {
+        const layer = tower.layers[j];
+        const layerRect = compute.layerRect(layer, j);
 
-        if (compute.inBounds({ x, y }, levelRect))
-          return level;
+        if (compute.inBounds({ x, y }, layerRect))
+          return layer;
       }
     }
 
@@ -169,23 +168,23 @@ function Game(root) {
   /* VALIDATION */
 
   /**
-   * Check if the user can select a level
+   * Check if the user can select a layer
    *
-   * @param {Level} level - the level to validate
-   * @returns {boolean} - true if the user can select this level
+   * @param {Level} layer - the layer to validate
+   * @returns {boolean} - true if the user can select this layer
    */
-  this.canSelectLevel = (level) => {
+  this.canSelectLevel = (layer) => {
     if (this.selectedLevel)
-      return level === this.selectedLevel;
+      return layer === this.selectedLevel;
 
-    const tower = level.tower;
+    const tower = layer.tower;
 
     if (!tower)
       return false;
 
-    const idx = tower.levels.indexOf(level);
+    const idx = tower.layers.indexOf(layer);
 
-    return idx === tower.levels.length - 1;
+    return idx === tower.layers.length - 1;
   };
 
   /**
@@ -209,22 +208,22 @@ function Game(root) {
   /* ANIMATION */
 
   /**
-   * Animate a level from a tower to another
+   * Animate a layer from a tower to another
    *
-   * @param {Tower} fromTower - the tower for which the level animates from
-   * @param {Tower} toTower - the tower for which the level animates to
+   * @param {Tower} fromTower - the tower for which the layer animates from
+   * @param {Tower} toTower - the tower for which the layer animates to
    */
   this.animate = (fromTower, toTower) => {
-    const level = fromTower.popLevel();
+    const layer = fromTower.popLevel();
 
     this.animation = {
       step: 0,
       fromTower,
       toTower,
-      level,
+      layer,
     };
 
-    level.tower = null;
+    layer.tower = null;
 
     const frame = () => {
       this.animation.step += 0.05;
@@ -241,21 +240,21 @@ function Game(root) {
   };
 
   /**
-   * End the level animation
+   * End the layer animation
    */
   this.endAnimate = () => {
     if (!this.animation)
       return;
 
-    this.redraw();
+    const { fromTower, toTower, layer } = this.animation;
 
-    const { fromTower, toTower, level } = this.animation;
-
-    toTower.addLevel(level);
+    toTower.addLevel(layer);
 
     this.selectedLevel.selected = false;
     this.selectedLevel = null;
     this.animation = null;
+
+    this.redraw();
   };
 
   /* EVENTS */
@@ -269,18 +268,18 @@ function Game(root) {
     if (this.animation)
       return;
 
-    const level = this.getLevelAt(e.offsetX, e.offsetY);
+    const layer = this.getLevelAt(e.offsetX, e.offsetY);
     const tower = this.getTowerAt(e.offsetX, e.offsetY);
 
-    if (level && this.canSelectLevel(level)) {
-      level.selected = !level.selected;
+    if (layer && this.canSelectLevel(layer)) {
+      layer.selected = !layer.selected;
 
-      if (level.selected) {
-        this.selectedLevel = level;
-        console.log('level selected', level);
+      if (layer.selected) {
+        this.selectedLevel = layer;
+        console.log('layer selected', layer);
       } else {
         this.selectedLevel = null;
-        console.log('level unselected');
+        console.log('layer unselected');
       }
 
     } else if (tower && this.canSelectTower(tower)) {

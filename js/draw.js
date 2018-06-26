@@ -1,18 +1,31 @@
-/** CONSTANTS DEFINITION */
+/**
+ * Generate a random color, between #000000 and #FFFFFF
+ *
+ * @returns {Values} - the generated color
+ */
+function getRandomColor() {
+  const r = parseInt(Math.random() * 255);
+  const g = parseInt(Math.random() * 255);
+  const b = parseInt(Math.random() * 255);
 
-const GAME_WIDTH = 620;
-const GAME_HEIGHT = 280;
-const GAME_SPACING = 10;
-const TOP_SPACING = 50;
-const TOWER_SPACING = 10;
-const POLE_WIDTH = 10;
-const BASE_HEIGHT = 5;
-const LEVEL_HEIGHT = 25;
-const LEVEL_SPACING = 5;
-const LEVEL_MIN_WIDTH = 20;
-const LEVEL_ANIMATION_SPACING = 20;
-const LEVELS_COLORS = buildLevelsColor();
-const TOWER_COLOR = '#666';
+  return new Values(`rgb(${r}, ${g}, ${b})`);
+}
+
+/**
+ * Creates a beautiful color palette
+ *
+ * @returns {Array<Values>} - the color palette
+ */
+function buildColorPalette() {
+  const colors = [];
+  const baseColor = getRandomColor().hexString();
+
+  for (let i = 0; i < 5; ++i) {
+    colors.push(new Values(baseColor).shade(i * 10));
+  }
+
+  return colors;
+}
 
 /**
  * Creates a <canvas> element
@@ -32,37 +45,14 @@ function createCanvas(root) {
 }
 
 /**
- * Creates a beautiful color palette
- *
- * @returns {Array<string>} - the color palette
- */
-function buildLevelsColor() {
-  const colors = [];
-
-  const r = parseInt(Math.random() * 255);
-  const g = parseInt(Math.random() * 255);
-  const b = parseInt(Math.random() * 255);
-
-  const baseColor = new Values(`rgb(${r}, ${g}, ${b})`)
-    .tint(30).
-    hexString();
-
-  for (let i = 0; i < 5; ++i) {
-    colors.push(new Values(baseColor).shade(i * 10));
-  }
-
-  return colors.map(c => c.hexString());
-}
-
-/**
  * Draws a rectangle filled with a given color
  *
  * @param {Context2D} ctx - the drawing context
  * @param {Rect} r - the rectangle definition
- * @param {string} fillStyle - the color in hex format
+ * @param {Values} fill - a Values instance of the fill color
  */
-function drawRect(ctx, r, fillStyle) {
-  ctx.fillStyle = fillStyle;
+function drawRect(ctx, r, fill) {
+  ctx.fillStyle = fill.hexString();
   ctx.fillRect(r.x, r.y, r.width, r.height);
 
   ctx.beginPath();
@@ -71,20 +61,20 @@ function drawRect(ctx, r, fillStyle) {
 }
 
 /**
- * Draws a level attached to a tower
+ * Draws a layer attached to a tower
  *
  * @param {Contex2D} ctx - the drawing context
- * @param {Level} level - the level to draw
- * @param {number} i - the level's position in the tower
+ * @param {Level} layer - the layer to draw
+ * @param {number} i - the layer's position in the tower
  */
-function drawLevel(ctx, level, i) {
-  let color = LEVELS_COLORS[level.size - 1];
+function drawLevel(ctx, layer, i) {
+  let color = LAYERS_COLORS[layer.size - 1];
 
-  if (level.selected) {
-    color = new Values(color).shade(10).hexString();
+  if (layer.selected) {
+    color = SELECTED_LAYER_COLOR;
   }
 
-  drawRect(ctx, compute.levelRect(level, i), color);
+  drawRect(ctx, compute.layerRect(layer, i), color);
 }
 
 /**
@@ -99,14 +89,12 @@ function drawTower(ctx, tower) {
 }
 
 /**
- * Draws a level during an animation
+ * Draws a layer during an animation
  *
  * @param {Context2D} ctx - the drawing context
- * @param {Level} level - the level to draw
+ * @param {Level} layer - the layer to draw
  * @param {Animation} animation - the animation object
  */
-function drawAnimatedLevel(ctx, level, animation) {
-  const color = LEVELS_COLORS[level.size - 1];
-
-  drawRect(ctx, compute.animatedLevelRect(level, animation));
+function drawAnimatedLevel(ctx, layer, animation) {
+  drawRect(ctx, compute.animatedLevelRect(layer, animation), SELECTED_LAYER_COLOR);
 }
