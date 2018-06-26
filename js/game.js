@@ -62,9 +62,8 @@ function Game(root) {
 
   /** CONSTRUCTOR */
 
-  this.canvas = createCanvas(root);
-  this.canvas.addEventListener('click', (e) => this.onClick(e));
-  this.context = this.canvas.getContext('2d');
+  this.canvas = null;
+  this.context = null;
 
   this.towers = [];
   this.selectedLayer = null;
@@ -76,11 +75,14 @@ function Game(root) {
    * Initializes the game
    */
   this.initialize = () => {
+    this.canvas = createCanvas(root);
+    this.canvas.addEventListener('click', (e) => this.onClick(e));
+
+    this.context = this.canvas.getContext('2d');
+
     const { width, height } = this.canvas;
 
     setDimensions(width, height);
-
-    this.towers.splice(0, 3);
 
     for (let i = 0; i < 3; ++i)
       this.towers.push(new Tower(i));
