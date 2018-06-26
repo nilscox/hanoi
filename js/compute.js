@@ -25,11 +25,11 @@
  */
 
 /**
-  * Global dimensions definition
-  *
-  * This global declaration allows to set the dimensions once when the game
-  * starts, and every time the canvas gets resized
-  */
+ * Global dimensions definition
+ *
+ * This global declaration allows to set the dimensions once when the game
+ * starts, and every time the canvas gets resized
+ */
 const g_dimensions = {
   width: 0,
   height: 0,

@@ -1,6 +1,3 @@
-/**
- * Layer
- */
 function Layer(tower, size) {
 
   this.tower = tower;
@@ -9,9 +6,6 @@ function Layer(tower, size) {
 
 }
 
-/**
- * Tower
- */
 function Tower(position) {
 
   this.position = position;
@@ -62,9 +56,6 @@ function Tower(position) {
 
 }
 
-/**
- * Game
- */
 function Game(root) {
 
   window.game = this;
