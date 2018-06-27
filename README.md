@@ -179,12 +179,12 @@ page. Le but de cette première fonction est donc de créer un élément
 pourrons voir notre jeu évoluer.
 
 Après avoir créer le canvas, il faut affecter les bonnes valeurs dans les
-propriétés `width` et `height` de l'élément. Nous pouvons maintenant insérer le
+propriétés `width` et `height` de l'élément, et finalement insérer le
 canvas dans le dom.
 
 ```
-prototype : createCanvas(HTMLNode) -> HTMLNode
-HTMLNode  : l'élément HTML dans lequel le canvas doit être inséré
+prototype : createCanvas(root: HTMLNode) -> HTMLNode
+root      : l'élément HTML dans lequel le canvas doit être inséré
 retour    : l'élément HTML canvas
 ```
 
@@ -204,11 +204,11 @@ retour    : la couleur générée
 ### Shades of the rainbow
 
 Cette fonction va permettre de créer la palette de couleurs. Elle va commencer
-par choisir une couleur de base, puis elle va la décliner autant de fois que
-nécéssaire en couleurs plus sombres.
+par choisir une couleur de base aléatoirement, puis elle va la décliner autant
+de fois que nécéssaire en couleurs plus sombres.
 
 ```
-prototype : `buildColorPalette(n) -> Array<Values>`
+prototype : buildColorPalette(n) -> Array<Values>
 n         : nombre de couleurs de la palette
 retour    : la palette de couleurs générées
 ```
@@ -221,9 +221,7 @@ allons donc créer une fonction qui va dessiner un rectangle à un endroit
 donné, et d'une certaine couleur.
 
 Pour donner un effet un peu moins "flat" à notre jeu, nous allons aussi
-dessiner les contours de chaque rectangle. Plus tard dans le code, nous allons
-changer la taille du trait pour les dessins dans le canvas (la propriété
-lineWidth). Elle sera de 0.5.
+dessiner les contours de chaque rectangle.
 
 ```
 prototype : drawRect(rect: Rect, fill: Values) -> void
@@ -231,15 +229,21 @@ rect      : les coordonnées et dimensions du rectangle à dessiner
 fill      : la couleur du rectangle
 ```
 
+Plus tard dans le code, nous allons changer la couleur de la stroke pour les
+dessins dans le canvas (la propriété stokeStyle). Elle sera de `#00000099` (à
+ajouter dans le fichier de test).
+
+> Note : il va être nécéssaire d'informer les fonctions de calcul de la taille
+> du canvas (`canvas.width` et `canvas.height`) pour y voir quelque chose.
+
 ### Etage par étage
 
-Premier vrai élément du jeu à afficher : un étage de la tour. La couleur dans
-laquelle affcher la tour doit venir de la palette de couleurs. La constante
-`LAYERS_COLORS` est un tableau contenant les valeurs de chaque étage, rangé par
-niveau (du plus petit au plus large).
+En dehors de toute fonction (préférablement en haut du fichier), nous allons
+définir deux constantes : `LAYERS_COLORS` et `SELECTED_LAYER_COLOR`,
+respectivement une palette de couleurs, anisi qu'une couleur random.
 
-Si l'étage est séléctionné, alors il faudra qu'il soit affiché dans une couleur
-différente de celle venant de la palette.
+Premier vrai élément du jeu à afficher : un étage de la tour. C'est simplement
+un rectangle, dont les couleurs viennent des constantes préalablement définies.
 
 ```
 prototype : drawLayer(layer: Layer, i: number) -> void
@@ -247,10 +251,32 @@ layer     : l'étage à dessiner
 i         : la position de l'étage dans la tour
 ```
 
+Arf. Pour tester cette fonction, nous avons besoin d'un étage. Fort
+heureusement, il est possible d'en représenter une avec un simple objet. Ce
+n'est pas le vrai type de `Layer` que nous enverrons à `drawLayer` plus tard
+lors du dessin du jeu, mais ça fait l'affaire pour tester la fonction.
+
+Tant que j'y suis, voilà une tour remplie d'étages. Elle sera utile pour la
+fonction suivante.
+
+```
+const tower = {
+  position: 1,
+  layers: [],
+};
+
+for (let i = 0; i < TOWER_NB_LAYERS; ++i) {
+  tower.layers.push({
+    size: i + 1,
+    selected: false,
+    tower: tower,
+  });
+}
+```
+
 ### C'est comme un "T" à l'envers
 
-Maintenant que nous pouvons afficher un niveau, c'est au tour de la tour
-(haha).
+Maintenant que nous pouvons afficher un étage, c'est au tour de la tour (haha).
 
 ```
 prototype : drawTower(tower: Tower)
@@ -262,7 +288,7 @@ tower     : devine ?
 Le moment est venu pour commencer à parler d'annimation... Nous reviendrons sur
 cette partie lors de l'implem du jeu lui-même, mais pour l'instant nous allons
 nous concentrer sur la fonction de dessin d'un étage de la tour à un certain
-point d'une animation.
+moment d'une animation.
 
 ```
 prototype : drawAnimatedLayer(layer: Layer, animation: Animation)
@@ -284,17 +310,33 @@ pourcentage d'avancement de la transition. Pour tester cette fonction, et voir
 l'animation, voici un petit bout de code...
 
 ```js
+const tower1 = {
+  position: 1,
+  layers: [],
+};
+
+const tower2 = {
+  position: 0,
+  layers: [],
+};
+
+for (let i = 0; i < TOWER_NB_LAYERS; ++i)
+  tower1.layers.push({ size: i + 1, selected: false, tower: tower1 });
+
 var animation = {
-  // ...
+  fromTower: tower1,
+  toTower: tower2,
   step: 0,
 };
 
 function frame() {
-  step += 0.01;
+  animation.step += 0.01;
 
-  // draw the animation here
+  ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
-  if (step < 1)
+  // draw the animation here...
+
+  if (animation.step < 1)
     requestAnimationFrame(frame);
 }
 
