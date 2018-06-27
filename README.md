@@ -58,6 +58,11 @@ structures de données (des classes), seront à faire plus tard. No spoil.
 
 ### Library
 
+### Tips
+
+Pour dessiner, nous allons utiliser le `<canvas>` HTML. Ce n'est pas
+nécéssaire, mais ça peut être pas mal de voir un peu comment ça marche.
+
 ## Partie 0 : Calculer
 
 Cette première partie sera certainement la plus simple, car elle n'est pas à
@@ -87,7 +92,7 @@ largeur et la hauteur du jeu, ce qui permettera aux fonctions de calcul de
 déduire certaines valeurs.
 
 ```
-Prototype : setDimensions(width: number, height: number) -> void
+prototype : setDimensions(width: number, height: number) -> void
 width     : la largeur du canvas
 height    : la hauteur du canvas
 ```
@@ -132,10 +137,10 @@ Voici une dernière fonction nous sera bien utile. Elle permet de vérifier si u
 point est à l'intérieur d'un `Rect`.
 
 ```
-Prototype : inBounds(point: Point, bounds: Rect) -> boolean
+prototype : inBounds(point: Point, bounds: Rect) -> boolean
 point     : le point
 bounds    : le rect
-Retour    : true seulement si le point est à l'intérieur du rect
+retour    : true seulement si le point est à l'intérieur du rect
 ```
 
 ## Partie 1 : Dessiner
@@ -178,9 +183,9 @@ propriétés `width` et `height` de l'élément. Nous pouvons maintenant insére
 canvas dans le dom.
 
 ```
-Prototype : createCanvas(HTMLNode) -> HTMLNode
+prototype : createCanvas(HTMLNode) -> HTMLNode
 HTMLNode  : l'élément HTML dans lequel le canvas doit être inséré
-Retour    : l'élément HTML canvas
+retour    : l'élément HTML canvas
 ```
 
 ### Du vert ! Du bleu !
@@ -192,8 +197,8 @@ entendu utilisé dans le reste du code pour créer une palette de couleurs pour
 les paliers des tours.
 
 ```
-Prototype : getRandomColor() -> Values
-Retour    : la couleur générée
+prototype : getRandomColor() -> Values
+retour    : la couleur générée
 ```
 
 ### Shades of the rainbow
@@ -203,9 +208,9 @@ par choisir une couleur de base, puis elle va la décliner autant de fois que
 nécéssaire en couleurs plus sombres.
 
 ```
-Prototype : `buildColorPalette(n) -> Array<Values>`
+prototype : `buildColorPalette(n) -> Array<Values>`
 n         : nombre de couleurs de la palette
-Retour    : la palette de couleurs générées
+retour    : la palette de couleurs générées
 ```
 
 ### Les premières briques
@@ -221,7 +226,7 @@ changer la taille du trait pour les dessins dans le canvas (la propriété
 lineWidth). Elle sera de 0.5.
 
 ```
-Prototype : drawRect(rect: Rect, fill: Values) -> void
+prototype : drawRect(rect: Rect, fill: Values) -> void
 rect      : les coordonnées et dimensions du rectangle à dessiner
 fill      : la couleur du rectangle
 ```
@@ -237,7 +242,7 @@ Si l'étage est séléctionné, alors il faudra qu'il soit affiché dans une cou
 différente de celle venant de la palette.
 
 ```
-Prototype : drawLayer(layer: Layer, i: number) -> void
+prototype : drawLayer(layer: Layer, i: number) -> void
 layer     : l'étage à dessiner
 i         : la position de l'étage dans la tour
 ```
@@ -248,7 +253,7 @@ Maintenant que nous pouvons afficher un niveau, c'est au tour de la tour
 (haha).
 
 ```
-Prototype : drawTower(tower: Tower)
+prototype : drawTower(tower: Tower)
 tower     : devine ?
 ```
 
@@ -260,7 +265,7 @@ nous concentrer sur la fonction de dessin d'un étage de la tour à un certain
 point d'une animation.
 
 ```
-Prototype : drawAnimatedLayer(layer: Layer, animation: Animation)
+prototype : drawAnimatedLayer(layer: Layer, animation: Animation)
 layer     : l'étage en transition
 animation : l'animation
 ```
@@ -358,7 +363,7 @@ aura besoin. On lui fournira en paramêtre l'élément du DOM dans lequel déssi
 le jeu.
 
 ```
-Prototype : Game(root: HTMLNode)
+prototype : Game(root: HTMLNode)
 root      : L'élément dans lequel dessiner le jeu
 ```
 
@@ -406,7 +411,7 @@ Notre game est bien instancié, mais il est tout vide... La première méthode d
 jeu que nous allons implémenter est l'initialisaiton.
 
 ```
-Prototype : initialize() -> void
+prototype : initialize() -> void
 ```
 
 Malgré son prototype relativement simple, cette fonction a pas mal de choses
@@ -433,7 +438,7 @@ La class `Layer` va stocker trois informations : la tour à laquelle elle est
 raattachée, sa taille et si elle est sélectionnée (par défaut, non ofc).
 
 ```
-Prototype : Layer(tower: Tower, size: number)
+prototype : Layer(tower: Tower, size: number)
 tower     : la tour à laquelle l'étage est rattaché
 size      : la taille du layer, à partir de 1
 ```
@@ -442,7 +447,7 @@ La `Tower`, quant à elle, sera définie par une position ainsi qu'un ensemble d
 `Layer`.
 
 ```
-Prototype : Tower(position: number)
+prototype : Tower(position: number)
 position  : la position de la tour (1, 2 ou 3)
 ```
 
@@ -454,7 +459,7 @@ chargerait de changer l'attribut `tower` de l'étage, et de l'ajouter dans son
 tableau.
 
 ```
-Prototype : addLayer(layer: Layer) -> void
+prototype : addLayer(layer: Layer) -> void
 layer     : le layer à ajouter dans la tour
 ```
 
@@ -462,7 +467,7 @@ Tant qu'à faire, pourquoi pas ajouter une méthode qui remplit un certain nombr
 d'étages ?
 
 ```
-Prototype : fill(n: number) -> void
+prototype : fill(n: number) -> void
 n         : le nombre de layers à ajouter dans la tour
 ```
 
@@ -477,7 +482,7 @@ tout d'abord effacer tout le canvas, pour dessiner une nouvelle *frame*.
 Ensuite, elle pourra dessiner tous les éléments du jeu.
 
 ```
-Prototype : redraw() -> void
+prototype : redraw() -> void
 ```
 
 Ah et au fait, il faudrait certainement l'appeler à la fin de
@@ -497,10 +502,10 @@ Il semblerait que cela nous donne l'occasion d'implémenter une nouvelle
 méthode :
 
 ```
-Prototype : getLayerAt(x: number, y: number) -> ?Layer
+prototype : getLayerAt(x: number, y: number) -> ?Layer
 x         : la coordonnée x du point
 y         : la coordonnée y du point
-Retour    : l'étage au point (x, y), ou null si aucun n'est trouvé
+retour    : l'étage au point (x, y), ou null si aucun n'est trouvé
 ```
 
 > Hint : les fonctions de calcul peuvent être bien pratiques...
@@ -532,7 +537,7 @@ d'un peu de validation... Nous allons donc ajouter une méthode du `Game`, pour
 vérifier si l'utilisateur peut sélectionner un étage.
 
 ```
-Prototype : canSelectLayer(layer: Layer) -> boolean
+prototype : canSelectLayer(layer: Layer) -> boolean
 layer     : l'étage à valider
 ```
 
@@ -540,7 +545,7 @@ Tiens et tant qu'on y est, il est fort probable que l'on ait besoin d'une
 fonction qui valide que l'utilisateur à le droit de sélectionner une tour.
 
 ```
-Prototype : canSelectTower(tower: Tower) -> boolean
+prototype : canSelectTower(tower: Tower) -> boolean
 tower     : la tour à valider
 ```
 
@@ -551,10 +556,10 @@ pour récupérer l'étage à un point donné, nous allons faire de même pour un
 tour.
 
 ```
-Prototype : getTowerAt(x: number, y: number) -> ?Tower
+prototype : getTowerAt(x: number, y: number) -> ?Tower
 x         : la coordonnée x du point
 y         : la coordonnée y du point
-Retour    : la tour au point (x, y), ou null si aucune n'est trouvée
+retour    : la tour au point (x, y), ou null si aucune n'est trouvée
 ```
 
 Et pour pouvoir jouer une partie entière, il ne nous reste plus qu'à déplacer
@@ -570,8 +575,8 @@ permette de retirer le dernier étage d'une tour (à placer dans la class
 `Tower`).
 
 ```
-Prototype : popLayer() -> ?Layer
-Retour    : Le dernier étage, ou null si la tour n'a pas d'étages
+prototype : popLayer() -> ?Layer
+retour    : Le dernier étage, ou null si la tour n'a pas d'étages
 ```
 
 Plus que les animations, et notre jeu sera déjà pas trop mal.
@@ -654,7 +659,7 @@ d'un étage d'une tour à l'autre. C'est la méthode `animate` du game qui va
 gérer tout ça. Voici à quoi elle doit ressembler :
 
 ```
-Prototype : animate(fromTower: Tower, toTower: Tower) -> void
+prototype : animate(fromTower: Tower, toTower: Tower) -> void
 fromTower : la tour de départ
 toTower   : la tour d'arrivée
 ```
@@ -674,7 +679,7 @@ Tant que la propriété `step` est inférieur à `1`, `frame` va appeler
 devra appeler une nouvelle méthode de la class `Game` : `endAnimate`.
 
 ```
-Prototype : endAnimate() -> void
+prototype : endAnimate() -> void
 ```
 
 Le but de cette ultime fonction de la classe `Game` sera de rétablir toutes les
