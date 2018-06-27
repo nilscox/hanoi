@@ -1,6 +1,6 @@
-function Layer(tower, size) {
+function Layer(size) {
 
-  this.tower = tower;
+  this.tower = null;
   this.size = size;
   this.selected = false;
 
@@ -17,10 +17,8 @@ function Tower(position) {
    * @param {number} n - the amount of layers to fill
    */
   this.fill = (n) => {
-    this.layers.splice(0, this.layers.length);
-
     for (let i = 0; i < n; ++i)
-      this.layers.push(new Layer(this, n - i));
+      this.addLayer(new Layer(n - i));
   };
 
   /**
