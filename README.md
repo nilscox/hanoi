@@ -531,4 +531,112 @@ Retour    : Le dernier étage, ou null si la tour n'a pas d'étages
 
 Plus que les animations, et notre jeu sera déjà pas trop mal.
 
+### Animations - Les outils
+
+Ahh... les animations en HTML. En fait, c'est super simple. L'environnement du
+navigateur nous offre une API très simple, car elle n'est composée que d'une
+fonction:
+[`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
+
+requestAF (pour les intimes), nous permet de demander au navigateur de nous
+avertir lorsqu'une nouvelle frame est disponible. Son prototype est ainsi :
+
+```
+requestAnimationFrame(callback: Function) -> number
+```
+
+La fonction `callback` passée en paramètre (que nous devons écrire), va donc
+être appelée par le navigateur lorsque la prochaine frame est disponible, nous
+donnant la possibilité de mettre à jour l'affichage du jeu (un appel à
+`redraw`, en somme). Si nous appelons requestAF depuis la fonction `callback`,
+en remettant cette même fonction `callback` en paramètre, alors elle sera
+appelée 60 fois par seconde, ce qui garantie une animation fluide.
+
+Un petit exemple pour faire passer tout ça ? Go
+[codepen](https://codepen.io/pen/) !
+
+On déclare un `<canvas>` dans le HTML :
+
+```
+<canvas width="50" height="30" />
+```
+
+et dans le JS, on va commencer par récupérer ce `<canavs>`, son context, et
+définir la couleur de remplissage à rouge :
+
+```
+const canvas = document.getElementsByTagName('canvas')[0];
+const ctx = canvas.getContext('2d');
+
+ctx.fillStyle = '#F00';
+```
+
+Nous aurons aussi besoin de d'une variable qui va évoluer au fil du temps.
+
+```
+let t = 0;
+```
+
+Voyons maintenant la fameuse fonction `callback`, que nous allons plutôt
+appeler `frame` :
+
+```
+const frame = () => {
+  t += 0.1;
+
+  ctx.clearRect(0, 0, 300, 200);
+  ctx.fillRect(Math.sin(t) * 10 + 10, 0, 30, 30);
+
+  requestAnimationFrame(frame);
+};
+```
+
+Cette fonction fait évoluer la variable `t`, efface le canvas, et dessine un
+carré dont la position varie selon un calcul dépendant de `t`. L'utilisation
+d'un sinus permet simplement d'avoir une animation sympa qui se répète.
+
+Enfin, frame appelle requestAF, et l'animation est la. Enfin presque. Il ne
+manque plus qu'à initier le premier appel à `frame` :
+
+```
+requestAnimationFrame(frame);
+```
+
+### Animations - Suite et fin
+
+Nous avons maintenant toutes les clés en main pour implémenter l'animation
+d'un étage d'une tour à l'autre. C'est la méthode `animate` du game qui va
+gérer tout ça. Voici à quoi elle doit ressembler :
+
+```
+Prototype : animate(fromTower: Tower, toTower: Tower) -> void
+fromTower : la tour de départ
+toTower   : la tour d'arrivée
+```
+
+Il n'est pas nécéssaire de donner en paramètre l'étage à déplacer, car il
+s'agit forcément de l'étage en haut de la tour de départ, auquel nous avons
+accès.
+
+La fonction `frame` va être une inner fonction de la méthode `animate`. Elle va
+faire évoluer la propriété `step` de l'anmiation à chaque appel, en lui
+ajoutant la valeur de la constante `ANIMATION_SPEED`, divisée par 100 (le but
+de ce facteur 100 est de garder une valeur "raisonnable" dans les constantes,
+car sinon, il aurait fallu définir `ANIMATION_SPEED` à la valeur `0.06`).
+
+Tant que la propriété `step` est inférieur à `1`, `frame` va appeler
+`requestAF` avec elle-même en paramètre, comme vu dans l'exemple. Sinon, elle
+devra appeler une nouvelle méthode de la class `Game` : `endAnimate`.
+
+```
+Prototype : endAnimate() -> void
+```
+
+Le but de cette ultime fonction de la classe `Game` sera de rétablir toutes les
+valeurs du jeu dans un état cohérent (désélection de l'étage, remise à `null` de
+l'animation, ...). Une fois que tout est bon, elle pourra appeler `redraw`.
+
+Nous n'avons plus qu'à appeler la fonction d'animation dans la fonction qui
+gère le clic de la souris, et... bah j'crois bien qu'on a fini.
+
 ## Partie 3 : Résoudre
