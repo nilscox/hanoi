@@ -11,6 +11,51 @@ Hanoï](https://fr.wikipedia.org/wiki/Tours_de_Hano%C3%AF).
 
 ### Sructures de données
 
+Le jeu fait évoluer des étages sur des tours, dessine des rectangles et des
+animations... Il nous faut un moyen de représenter tout ça, pour pouvoir les
+manipuler dans notre code. Le but est donc de structurer nos données.
+
+Premièrement, il existe le point. Le point sera représenté par un objet
+contenant deux propriétés : `x` et `y`. Difficile de faire plus simple...
+
+Ensuite, nous manipulerons surtout des rectangles. Et comme `Rectangle` c'est
+long à écrire, nous allons le réduire à `Rect`. Ce sera un objet contenant
+deux propriétés informant sur la position du coin suppérieur gauche du
+rectangle (la encore, `x` et `y`), ainsi que deux autres propriétés donnant
+les dimensions du rectangle (`width` et `height`).
+
+Enfin, mais c'est pas pour tout de suite, certains objets seront animés. Pour
+représenter une animation, nous utiliserons une fois de plus un objet, avec
+cette fois trois propriétés : la tour de départ de l'étage en transition, la
+tour d'arrivée, l'étage lui-même et le pourcentage d'avancement de la
+transition (un nombre entre `0` et `1`).
+
+Si on récapépèt, on a :
+
+```js
+Point = {
+  x: number,
+  y: number,
+}
+
+Rect = {
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+}
+
+Animation = {
+  fromTower: Tower,
+  toTower: Tower,
+  layer: Layer,
+  step: number,
+}
+```
+
+Oh wait... on a pas encore définit les `Tower` et `Layer` ! En effet, ces
+structures de données (des classes), seront à faire plus tard. No spoil.
+
 ### Library
 
 ## Partie 0 : Calculer

@@ -20,6 +20,7 @@
  * Animation = {
  *   fromTower: Tower,
  *   toTower: Tower,
+ *   layer: Layer,
  *   step: number,
  * }
  */
