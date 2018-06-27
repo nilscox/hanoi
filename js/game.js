@@ -40,18 +40,6 @@ function Tower(position) {
     return this.layers.pop();
   };
 
-  /**
-   * Retrieve the tower's top layer
-   *
-   * @returns {Layer} - the top layer if any, or null otherwise
-   */
-  this.getTopLayer = () => {
-    if (this.layers.length === 0)
-      return null;
-
-    return this.layers[this.layers.length - 1];
-  }
-
 }
 
 function Game(root) {
@@ -196,7 +184,7 @@ function Game(root) {
    * @returns {boolean} - true if the user can select this tower
    */
   this.canSelectTower = (tower) => {
-    const topLayer = tower.getTopLayer();
+    const topLayer = tower.layers[tower.layers.length - 1];
 
     if (!this.selectedLayer || tower === this.selectedLayer.tower)
       return false;
