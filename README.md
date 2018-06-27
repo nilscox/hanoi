@@ -377,4 +377,158 @@ C'est pas tout... il y aura d'autres choses à faire, mais plus tard. Nous
 pouvons laisser un petit console.log à la fin de l'initialisation, nous
 informant que le jeu est prêt.
 
+### Les étages et la tour
+
+Comme promis, nous avons, en plus de la class `Game`, les class `Tower` et
+`Layer`. Allez, on fait les deux à la fois ?
+
+Bon, pour l'instant on ne va faire que les constructeurs hein. Et puis
+d'ailleurs il n'y aura aucune méthode dans la class `Layer`, donc bon...
+La class `Layer` va stocker trois informations : la tour à laquelle elle est
+raattachée, sa taille et si elle est sélectionnée (par défaut, non ofc).
+
+```
+Prototype : Layer(tower: Tower, size: number)
+tower     : la tour à laquelle l'étage est rattaché
+size      : la taille du layer, à partir de 1
+```
+
+La `Tower`, quant à elle, sera définie par une position ainsi qu'un ensemble de
+`Layer`.
+
+```
+Prototype : Tower(position: number)
+position  : la position de la tour (1, 2 ou 3)
+```
+
+### Initialization, part II
+
+Pour initialiser le jeu, il nous faudra bien ajouter des étages dans la tour.
+Peut-être qu'une méthode de la classe `Tower` serait la bienvenue ? Elle se
+chargerait de changer l'attribut `tower` de l'étage, et de l'ajouter dans son
+tableau.
+
+```
+Prototype : addLayer(layer: Layer) -> void
+layer     : le layer à ajouter dans la tour
+```
+
+Tant qu'à faire, pourquoi pas ajouter une méthode qui remplit un certain nombre
+d'étages ?
+
+```
+Prototype : fill(n: number) -> void
+n         : le nombre de layers à ajouter dans la tour
+```
+
+Maintenant qu'il est possible de créer des tours et de les remplir d'étages,
+nous pouvons compléter l'intialisation du jeu. Nous n'avons qu'à créer 3 tours,
+et à en remplir une au hasard.
+
+### Des seins
+
+Une des fonction coeur du système est la fonction de dessin du jeu. Elle va
+tout d'abord effacer tout le canvas, pour dessiner une nouvelle *frame*.
+Ensuite, elle pourra dessiner tous les éléments du jeu.
+
+```
+Prototype : redraw() -> void
+```
+
+Ah et au fait, il faudrait certainement l'appeler à la fin de
+l'initialisation !
+
+### Intéractions
+
+Pour jouer, l'utilisateur va devoir cliquer sur des parties du canvas, c'est
+donc à nous d'écouter l'event `onclick`, pour faire évoluer le jeu en
+conséquences. Pour ce faire, let's add a `onClick` method, sans oublier de la
+binder correctement au listener du canvas (dans l'initialisation).
+
+Pour l'instant, notre but sera de changer l'attribut `selected` du layer
+lorsque l'on clic dessus, et de voir sa couleur changer. Cela implique que nous
+devons être capable de savoir sur quel étage est le pointeur au moment du clic.
+Il semblerait que cela nous donne l'occasion d'implémenter une nouvelle
+méthode :
+
+```
+Prototype : getLayerAt(x: number, y: number) -> ?Layer
+x         : la coordonnée x du point
+y         : la coordonnée y du point
+Retour    : l'étage au point (x, y), ou null si aucun n'est trouvé
+```
+
+> Hint : les fonctions de calcul peuvent être bien pratiques...
+
+Bien, si le nom de la variable event s'apelle `e`, nous pouvons maintenant
+récupérer le layer cliqué via :
+
+```
+this.getLayerAt(e.offsetX, e.offsetY)
+```
+
+Après avoir sélectionné ou désélectionné un étage, il peut être pertinent de
+logger un message dans la console. Cela permettera de garder une trace des
+opérations effectuées.
+
+Pour voir le changement de couleur, il ne faudra pas oublier d'appeler
+`redraw`.
+
+Aussi, nous aurons besoin de garder une référence vers le layer sélectionné au
+cours du jeu. Ajoutons-le dans les attributs de la class `Game`.
+
+Grosse partie, n'est-ce pas ? Et c'est pas fini !
+
+### You shall not select this level
+
+Obviously, something's wrong here. Nous ne sommes pas sensé sélectionner un
+étage en plein milieu d'une tour. J'ai l'impression que l'on va avoir besoin
+d'un peu de validation... Nous allons donc ajouter une méthode du `Game`, pour
+vérifier si l'utilisateur peut sélectionner un étage.
+
+```
+Prototype : canSelectLayer(layer: Layer) -> boolean
+layer     : l'étage à valider
+```
+
+Tiens et tant qu'on y est, il est fort probable que l'on ait besoin d'une
+fonction qui valide que l'utilisateur à le droit de sélectionner une tour.
+
+```
+Prototype : canSelectTower(tower: Tower) -> boolean
+tower     : la tour à valider
+```
+
+### PLAY!
+
+Ca avance ! Mais ne nous arrêtons pas en si bon chemin. Comme nous avons fait
+pour récupérer l'étage à un point donné, nous allons faire de même pour une
+tour.
+
+```
+Prototype : getTowerAt(x: number, y: number) -> ?Tower
+x         : la coordonnée x du point
+y         : la coordonnée y du point
+Retour    : la tour au point (x, y), ou null si aucune n'est trouvée
+```
+
+Et pour pouvoir jouer une partie entière, il ne nous reste plus qu'à déplacer
+un étage d'une tour à l'autre. Dans le `onClick`, nous pouvons maintenant
+récupérer la tour au coordonées de la souris, et vérifier si elle peut être
+sélectionnée. Si c'est le cas, alors on peut passer l'étage sélectionné d'une
+tour à l'autre, et de réinitialiser la sélection.
+
+La encore, un petit message de log serait le bienvenu.
+
+Pour alléger le code de cette fonction, il nous faudrait une méthode qui nous
+permette de retirer le dernier étage d'une tour (à placer dans la class
+`Tower`).
+
+```
+Prototype : popLayer() -> ?Layer
+Retour    : Le dernier étage, ou null si la tour n'a pas d'étages
+```
+
+Plus que les animations, et notre jeu sera déjà pas trop mal.
+
 ## Partie 3 : Résoudre
