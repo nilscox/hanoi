@@ -284,7 +284,7 @@ pourcentage d'avancement de la transition. Pour tester cette fonction, et voir
 l'animation, voici un petit bout de code...
 
 ```js
-const animation = {
+var animation = {
   // ...
   step: 0,
 };
@@ -326,6 +326,7 @@ est possible de lui ajouter des attributs et des méthodes via le mot clé
 
 ```js
 /* Beer class definition */
+
 function Beer(name, degree) {
 
   /* attributes */
@@ -333,26 +334,25 @@ function Beer(name, degree) {
   this.name = name;
   this.degree = degree;
 
-  /* methods */
-
-  this.serve = (glass) => {
-    // ...
-  };
-
-  this.drink = (someone) => {
-    // ...
-  };
-
 }
+
+/* methods */
+
+Beer.prototype.serve = (glass) => {
+  // ... do something with this ...
+};
+
+Beer.prototype.drink = (someone) => {
+  // ... do something with this ...
+};
 ```
 
-Il existe une notation un peu différente pour ajouter des méthodes à une classe
-(via le [`prototype`](https://www.w3schools.com/js/js_object_prototypes.asp)),
-mais autant garder la sytaxe lisible en passant par des arrow functions.
+La définition de méthodes s'effectue via le
+[`prototype`](https://www.w3schools.com/js/js_object_prototypes.asp)).
 
-> Attention ! si nous décidons de déclarer une fonction avec le mot clé
-> function à l'intérieur de la définition de la classe, alors le mot clé `this`
-> fera référence à l'inner fonction. `const that = this`, toussa...
+> Attention ! si nous décidons de déclarer une fonction à l'intérieur de la
+> définition de la classe, alors le mot clé `this` fera référence à l'inner
+> fonction. `var that = this`, toussa...
 
 Let's go?
 
@@ -388,11 +388,11 @@ Bon, il est temps d'ajouter le tout dernier ficher de la codebase :
 `js/main.js`. Ce sera le point d'entrée du jeu.
 
 ```js
-const body = document.getElementsByTagName('body')[0];
-const root = document.getElementById('game');
+var body = document.getElementsByTagName('body')[0];
+var root = document.getElementById('game');
 
 body.onload = () => {
-  const game = new Game(root);
+  var game = new Game(root);
 
   window.game = game;
 };
@@ -616,8 +616,8 @@ et dans le JS, on va commencer par récupérer ce `<canavs>`, son context, et
 définir la couleur de remplissage à rouge :
 
 ```js
-const canvas = document.getElementsByTagName('canvas')[0];
-const ctx = canvas.getContext('2d');
+var canvas = document.getElementsByTagName('canvas')[0];
+var ctx = canvas.getContext('2d');
 
 ctx.fillStyle = '#F00';
 ```
@@ -625,14 +625,14 @@ ctx.fillStyle = '#F00';
 Nous aurons aussi besoin de d'une variable qui va évoluer au fil du temps.
 
 ```js
-let t = 0;
+var t = 0;
 ```
 
 Voyons maintenant la fameuse fonction `callback`, que nous allons plutôt
 appeler `frame` :
 
 ```js
-const frame = () => {
+function frame() {
   t += 0.1;
 
   ctx.clearRect(0, 0, 300, 200);
