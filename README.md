@@ -48,7 +48,6 @@ Rect = {
 Animation = {
   fromTower: Tower,
   toTower: Tower,
-  layer: Layer,
   step: number,
 }
 ```
@@ -285,7 +284,7 @@ tower     : devine ?
 
 ### Ca bouge !
 
-Le moment est venu pour commencer à parler d'annimation... Nous reviendrons sur
+Le moment est venu pour commencer à parler d'animation... Nous reviendrons sur
 cette partie lors de l'implem du jeu lui-même, mais pour l'instant nous allons
 nous concentrer sur la fonction de dessin d'un étage de la tour à un certain
 moment d'une animation.
@@ -301,7 +300,6 @@ les propriétés :
 
 - `fromTower` : la tour de départ de l'étage
 - `toTower`   : la tour d'arrivée de l'étage
-- `layer`     : l'étage actuellement en transition d'une tour à l'autre
 - `step`      : un entier entre 0 et 1
 
 Les propriétés d'un objet d'animaiton sont relativement simples. La seule
