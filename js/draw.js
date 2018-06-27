@@ -1,12 +1,15 @@
+var LAYERS_COLORS = buildColorPalette(TOWER_NB_LAYERS);
+var SELECTED_LAYER_COLOR = getRandomColor().tint(30);
+
 /**
  * Generate a random color, between #000000 and #FFFFFF
  *
  * @returns {Values} - the generated color
  */
 function getRandomColor() {
-  const r = parseInt(Math.random() * 255);
-  const g = parseInt(Math.random() * 255);
-  const b = parseInt(Math.random() * 255);
+  var r = parseInt(Math.random() * 255);
+  var g = parseInt(Math.random() * 255);
+  var b = parseInt(Math.random() * 255);
 
   return new Values(`rgb(${r}, ${g}, ${b})`);
 }
@@ -18,10 +21,10 @@ function getRandomColor() {
  * @returns {Array<Values>} - the color palette
  */
 function buildColorPalette(n) {
-  const colors = [];
-  const baseColor = getRandomColor().hexString();
+  var colors = [];
+  var baseColor = getRandomColor().hexString();
 
-  for (let i = 0; i < n; ++i) {
+  for (var i = 0; i < n; ++i) {
     colors.push(new Values(baseColor).shade(i * 10));
   }
 
@@ -35,7 +38,7 @@ function buildColorPalette(n) {
  * @returns {HTMLNode} - the created canvas
  */
 function createCanvas(root) {
-  const canvas = document.createElement('canvas');
+  var canvas = document.createElement('canvas');
 
   canvas.width = GAME_WIDTH;
   canvas.height = GAME_HEIGHT;

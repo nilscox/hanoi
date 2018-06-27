@@ -1,18 +1,16 @@
 /** CONSTANTS DEFINITION */
 
-const TOWER_NB_LAYERS = 6;
-const GAME_WIDTH = 620;
-const GAME_HEIGHT = 280;
-const GAME_SPACING = 10;
-const TOP_SPACING = 50;
-const TOWER_SPACING = 10;
-const POLE_WIDTH = 10;
-const BASE_HEIGHT = 5;
-const LAYER_HEIGHT = 25;
-const LAYER_SPACING = 5;
-const LAYER_MIN_WIDTH = 20;
-const LAYER_ANIMATION_SPACING = 20;
-const LAYERS_COLORS = buildColorPalette(TOWER_NB_LAYERS);
-const SELECTED_LAYER_COLOR = getRandomColor().tint(30);
-const TOWER_COLOR = new Values('#666');
-const ANIMATION_SPEED = 6;
+var TOWER_NB_LAYERS = 6;
+var GAME_WIDTH = 620;
+var GAME_HEIGHT = 280;
+var GAME_SPACING = 10;
+var TOP_SPACING = 50;
+var TOWER_SPACING = 10;
+var POLE_WIDTH = 10;
+var BASE_HEIGHT = 5;
+var LAYER_HEIGHT = 25;
+var LAYER_SPACING = 5;
+var LAYER_MIN_WIDTH = 20;
+var LAYER_ANIMATION_SPACING = 20;
+var TOWER_COLOR = new Values('#666');
+var ANIMATION_SPEED = 6;

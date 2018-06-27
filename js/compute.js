@@ -31,7 +31,7 @@
  * This global declaration allows to set the dimensions once when the game
  * starts, and every time the canvas gets resized
  */
-const g_dimensions = {
+var g_dimensions = {
   width: 0,
   height: 0,
 };
@@ -47,7 +47,7 @@ function setDimensions(width, height) {
   g_dimensions.height = height;
 }
 
-const compute = {
+var compute = {
 
   /**
    * Computes a tower's width
@@ -65,8 +65,8 @@ const compute = {
    * @returns {number} - the layer's width
    */
   layerWidth: function layerWidth(layer) {
-    const ratio = layer.size / TOWER_NB_LAYERS;
-    const towerWidth = compute.towerWidth();
+    var ratio = layer.size / TOWER_NB_LAYERS;
+    var towerWidth = compute.towerWidth();
 
     return (towerWidth - LAYER_MIN_WIDTH) * ratio + LAYER_MIN_WIDTH;
   },
@@ -78,8 +78,8 @@ const compute = {
    * @returns {Rect} - the tower's pole rect
    */
   poleRect: function poleRect(tower) {
-    const towerWidth = compute.towerWidth();
-    const pos = tower.position;
+    var towerWidth = compute.towerWidth();
+    var pos = tower.position;
 
     return {
       x: GAME_SPACING + towerWidth / 2 - POLE_WIDTH / 2 + pos * (towerWidth + 2 * TOWER_SPACING),
@@ -96,8 +96,8 @@ const compute = {
    * @returns {Rect} - the tower's base rect
    */
   baseRect: function baseRect(tower) {
-    const towerWidth = compute.towerWidth();
-    const pos = tower.position;
+    var towerWidth = compute.towerWidth();
+    var pos = tower.position;
 
     return {
       x: GAME_SPACING + pos * (towerWidth + 2 * TOWER_SPACING),
@@ -114,8 +114,8 @@ const compute = {
    * @returns {Rect} - the tower's rect
    */
   towerRect: function towerRect(tower) {
-    const poleRect = compute.poleRect(tower);
-    const baseRect = compute.baseRect(tower);
+    var poleRect = compute.poleRect(tower);
+    var baseRect = compute.baseRect(tower);
 
     return {
       x: baseRect.x,
@@ -133,8 +133,8 @@ const compute = {
    * @returns {Rect} - the layer's rect
    */
   layerRect: function layerRect(layer, i) {
-    const towerWidth = compute.towerWidth();
-    const layerWidth = compute.layerWidth(layer);
+    var towerWidth = compute.towerWidth();
+    var layerWidth = compute.layerWidth(layer);
 
     return {
       x: GAME_SPACING + (towerWidth - layerWidth) / 2 + layer.tower.position * (towerWidth + 2 * TOWER_SPACING),
@@ -151,23 +151,23 @@ const compute = {
    * @param {Animation} animation - the animation object
    */
   animatedLayerRect: function animatedLayerRect(layer, animation) {
-    const { fromTower, toTower, step } = animation;
+    var { fromTower, toTower, step } = animation;
 
-    const towerWidth = compute.towerWidth();
-    const layerWidth = compute.layerWidth(layer);
-    const fromTowerRect = compute.towerRect(fromTower);
-    const toTowerRect = compute.towerRect(toTower);
+    var towerWidth = compute.towerWidth();
+    var layerWidth = compute.layerWidth(layer);
+    var fromTowerRect = compute.towerRect(fromTower);
+    var toTowerRect = compute.towerRect(toTower);
 
-    const result = {
+    var result = {
       width: layerWidth,
       height: LAYER_HEIGHT,
     }
 
     if (step < 1/3 || step > 2/3) {
-      const tower = step < 1/3 ? fromTower : toTower;
-      let a = g_dimensions.height - GAME_SPACING - BASE_HEIGHT - (tower.layers.length + 1) * (LAYER_HEIGHT + LAYER_SPACING);
-      let b = LAYER_ANIMATION_SPACING;
-      let f = step * 3;
+      var tower = step < 1/3 ? fromTower : toTower;
+      var a = g_dimensions.height - GAME_SPACING - BASE_HEIGHT - (tower.layers.length + 1) * (LAYER_HEIGHT + LAYER_SPACING);
+      var b = LAYER_ANIMATION_SPACING;
+      var f = step * 3;
 
       if (tower === toTower) {
         b = [a, a = b][0];
@@ -177,9 +177,9 @@ const compute = {
       result.x = GAME_SPACING + (towerWidth - layerWidth) / 2 + tower.position * (towerWidth + 2 * TOWER_SPACING);
       result.y = (b - a) * f + a;
     } else {
-      let a = fromTowerRect.x + towerWidth / 2 - layerWidth / 2;
-      let b = toTowerRect.x + towerWidth / 2 - layerWidth / 2;
-      let f = step * 3 - 1;
+      var a = fromTowerRect.x + towerWidth / 2 - layerWidth / 2;
+      var b = toTowerRect.x + towerWidth / 2 - layerWidth / 2;
+      var f = step * 3 - 1;
 
       if (a > b) {
         b = [a, a = b][0];
