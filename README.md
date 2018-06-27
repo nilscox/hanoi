@@ -171,7 +171,7 @@ fonctions utilisées).
 Voyons maintenant les fonctions elles même. Pour tester ces fonctions, il est
 possible de créer (et de linker) un fichier de test.
 
-### &lt;canvas /&gt
+### &lt;canvas /&gt;
 
 Tout d'abord, il nous sera bien utile de pouvoir dessiner quelque part dans la
 page. Le but de cette première fonction est donc de créer un élément
