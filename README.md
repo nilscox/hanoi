@@ -283,7 +283,7 @@ propriété peut-être un peu obscure serait le *step*. Il s'agit simplement du
 pourcentage d'avancement de la transition. Pour tester cette fonction, et voir
 l'animation, voici un petit bout de code...
 
-```
+```js
 const animation = {
   // ...
   step: 0,
@@ -301,7 +301,8 @@ function frame() {
 requestAnimationFrame(frame);
 ```
 
-Ce snippet sera approfondi d'ici quelques lignes (de code).
+Ce snippet sera approfondi d'ici quelques lignes (de code). Ce n'est pas trop
+la peine de chercher à comprendre dès maintenant.
 
 Ca y est ! On en a fini avec les fonctions de dessin. Oui oui, c'est tout ce
 dont nous aurons besoin par la suite. Fastoch' non ?
@@ -323,7 +324,7 @@ Une fonction se comporte comme le constructeur d'une classe en
 est possible de lui ajouter des attributs et des méthodes via le mot clé
 `this`. Un bref exemple permettera de mieux comprendre :
 
-```
+```js
 /* Beer class definition */
 function Beer(name, degree) {
 
@@ -386,7 +387,7 @@ simplement besoin d'enregistrer un tableau vide.
 Bon, il est temps d'ajouter le tout dernier ficher de la codebase :
 `js/main.js`. Ce sera le point d'entrée du jeu.
 
-```
+```js
 const body = document.getElementsByTagName('body')[0];
 const root = document.getElementById('game');
 
@@ -513,7 +514,7 @@ retour    : l'étage au point (x, y), ou null si aucun n'est trouvé
 Bien, si le nom de la variable event s'apelle `e`, nous pouvons maintenant
 récupérer le layer cliqué via :
 
-```
+```js
 this.getLayerAt(e.offsetX, e.offsetY)
 ```
 
@@ -591,7 +592,7 @@ fonction:
 requestAF (pour les intimes), nous permet de demander au navigateur de nous
 avertir lorsqu'une nouvelle frame est disponible. Son prototype est ainsi :
 
-```
+```js
 requestAnimationFrame(callback: Function) -> number
 ```
 
@@ -607,14 +608,14 @@ Un petit exemple pour faire passer tout ça ? Go
 
 On déclare un `<canvas>` dans le HTML :
 
-```
+```html
 <canvas width="50" height="30" />
 ```
 
 et dans le JS, on va commencer par récupérer ce `<canavs>`, son context, et
 définir la couleur de remplissage à rouge :
 
-```
+```js
 const canvas = document.getElementsByTagName('canvas')[0];
 const ctx = canvas.getContext('2d');
 
@@ -623,14 +624,14 @@ ctx.fillStyle = '#F00';
 
 Nous aurons aussi besoin de d'une variable qui va évoluer au fil du temps.
 
-```
+```js
 let t = 0;
 ```
 
 Voyons maintenant la fameuse fonction `callback`, que nous allons plutôt
 appeler `frame` :
 
-```
+```js
 const frame = () => {
   t += 0.1;
 
@@ -648,7 +649,7 @@ d'un sinus permet simplement d'avoir une animation sympa qui se répète.
 Enfin, frame appelle requestAF, et l'animation est la. Enfin presque. Il ne
 manque plus qu'à initier le premier appel à `frame` :
 
-```
+```js
 requestAnimationFrame(frame);
 ```
 
