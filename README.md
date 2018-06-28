@@ -9,6 +9,47 @@ Hanoï](https://fr.wikipedia.org/wiki/Tours_de_Hano%C3%AF).
 
 ### Constants
 
+Certaines valeurs du jeu sont choisi arbitrairement. Par exemple, les
+dimensions du jeu, le nombre d'étages de la tour... Ces valeurs sont définies
+dans un fichier séparé déjà fourni : `js/constants.js`. Des valeurs par défaut
+sont déjà données à titre d'exemple, mais il est tout à fait possible, et même
+encouragé de changer ces valeurs, et voir ce que ça donne...
+
+Le but d'extraire ces constantes dans un fichier unique, et d'une part d'être
+capable de partager ces valeurs dans les différents fichiers, mais aussi
+d'éviter les "magic values", les valeurs en dur dans le code. De plus, s'il est
+nécéssaire de changer l'une de ces valeurs, cela peut être fait en ne touchant
+qu'au fichier de déclaration de constantes. Voici une définition générale de
+toutes les constantes utilisées.
+
+```
+TOWER_NB_LAYERS : le nombre total d'étages
+GAME_WIDTH : la largeur du jeu
+GAME_HEIGHT : la hauteur du jeu
+GAME_SPACING : l'espacement entre les bords et les éléments du jeu
+TOP_SPACING : l'espacement entre le bord haut du jeu et le haut des tours
+TOWER_SPACING : l'espacement entre les tours
+POLE_WIDTH : la largeur de la barre centrale d'une tour
+BASE_HEIGHT : la hauteur du la base d'une tour
+LAYER_HEIGHT : la hauteur d'un étage
+LAYER_SPACING : l'espacement entre deux étages
+LAYER_MIN_WIDTH : la largeur du plus petit étage
+LAYER_ANIMATION_SPACING : l'espacement entre un layer en transition et le bord haut du jeu
+ANIMATION_SPEED : la vitesse d'animation d'un étage entre deux tours
+```
+
+Ces définitions de valeurs devront être utilisées lors de l'implémentation des
+fonctions du jeu. Je ne rapellerai pas les constantes à utiliser pour chaque
+fonction, il faut donc garder ça en tête et utiliser les bonnes constantes au
+bon moment.
+
+Certaines définition ne seront utilisées que dans le fichier de calculs, déjà
+fourni. Toutes ne vont donc pas apparaître dans le code à écrire...
+
+> Note : Le nombre de tours ne peux pas dépasser un certain nombre, sinon la
+> création de la palette de couleurs ne pourra plus fonctionner, et le jeu va
+> crasher. Il vaut mieux le garder inférieur à 10.
+
 ### Sructures de données
 
 Le jeu fait évoluer des étages sur des tours, dessine des rectangles et des
@@ -56,6 +97,41 @@ Oh wait... on a pas encore définit les `Tower` et `Layer` ! En effet, ces
 structures de données (des classes), seront à faire plus tard. No spoil.
 
 ### Library
+
+La seule et unique bibliothèque utilisée dans le projet est
+[values.js](https://github.com/noeldelgado/values.js). Elle permet de manipuler
+simplement des couleurs, et de le décliner en ajoutant du blanc et du noir, ce
+qui permet de créer facilement des dégradés. Toutes les couleurs utilisées dans
+le jeu seront donc des objet de type `Values`.
+
+Voici un petit exemple d'utilisation de cette bibliothèque.
+
+```
+const color = new Values('#CC3399');
+const divStyle = 'width: 180px; height: 35px;';
+
+for (let i = 0; i < 10; ++i) {
+  const elem = document.createElement('div');
+  const elemColor = color.shade(8 * i);
+
+  elem.style = `${divStyle} background-color: ${elemColor.hexString()}`;
+  document.body.appendChild(elem);
+}
+```
+
+Nous pouvons voir qu'il est possible de créer une instance de Values en passant
+une couleur sous forme de string hexadécimale à son constructeur. Il est aussi
+possible de lui donner couleur sous forme de string rgb (`rgb(200, 80, 130)`).
+
+Pour convertir l'instance de `Values` en couleur sous forme de string, il est
+possible d'appeler sa méthode `hexString()`. Par contre, si la valeur donnée au
+constructeur de `Values` est invalide, la valeur renvoyée par le contructeur ne
+sera pas une instance de `Values`, mais une instance d'`Error` (bon à savoir
+pour le débug).
+
+Enfin, la dernière méthode de `Values` dont nous aurons besoin permet
+d'assombrir une couleur. Cette méthode est `shade(number)`. La valeur passée en
+paramètre est le pourcentage d'assombrissement entre `0` et `100`.
 
 ### Tips
 
@@ -238,8 +314,11 @@ ajouter dans le fichier de test).
 ### Etage par étage
 
 En dehors de toute fonction (préférablement en haut du fichier), nous allons
-définir deux constantes : `LAYERS_COLORS` et `SELECTED_LAYER_COLOR`,
-respectivement une palette de couleurs, anisi qu'une couleur random.
+définir trois constantes : `TOWER_COLOR`, `LAYERS_COLORS` et
+`SELECTED_LAYER_COLOR`, respectivement la couleur d'une tour, une palette de
+couleurs, anisi qu'une couleur random.
+
+La couleur d'une tour sera une `new Values('#666')`.
 
 Premier vrai élément du jeu à afficher : un étage de la tour. C'est simplement
 un rectangle, dont les couleurs viennent des constantes préalablement définies.
