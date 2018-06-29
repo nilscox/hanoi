@@ -711,8 +711,7 @@ Plus que les animations, et notre jeu sera déjà pas trop mal.
 ### Animations - Les outils
 
 Ahh... les animations en HTML. En fait, c'est super simple. L'environnement du
-navigateur nous offre une API très simple, car elle n'est composée que d'une
-fonction:
+navigateur nous offre une API pour les animations composée d'une seule fonction:
 [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
 
 requestAF (pour les intimes), nous permet de demander au navigateur de nous
@@ -726,8 +725,8 @@ La fonction `callback` passée en paramètre (que nous devons écrire), va donc
 être appelée par le navigateur lorsque la prochaine frame est disponible, nous
 donnant la possibilité de mettre à jour l'affichage du jeu (un appel à
 `redraw`, en somme). Si nous appelons requestAF depuis la fonction `callback`,
-en remettant cette même fonction `callback` en paramètre, alors elle sera
-appelée 60 fois par seconde, ce qui garantie une animation fluide.
+en redonnant cette même fonction `callback` en paramètre, alors elle sera
+appelée ~60 fois par seconde, ce qui garantie une animation fluide.
 
 Un petit exemple pour faire passer tout ça ? Go
 [codepen](https://codepen.io/pen/) !
@@ -793,13 +792,14 @@ toTower   : la tour d'arrivée
 
 Il n'est pas nécéssaire de donner en paramètre l'étage à déplacer, car il
 s'agit forcément de l'étage en haut de la tour de départ, auquel nous avons
-accès.
+accès. En revanche, il nous faut garder en mémoire l'animation, dans les
+attributs de la classe `Game` par exemple.
 
 La fonction `frame` va être une inner fonction de la méthode `animate`. Elle va
 faire évoluer la propriété `step` de l'anmiation à chaque appel, en lui
 ajoutant la valeur de la constante `ANIMATION_SPEED`, divisée par 100 (le but
 de ce facteur 100 est de garder une valeur "raisonnable" dans les constantes,
-car sinon, il aurait fallu définir `ANIMATION_SPEED` à la valeur `0.06`).
+car sinon, il aurait fallu définir `ANIMATION_SPEED = 0.06`).
 
 Tant que la propriété `step` est inférieur à `1`, `frame` va appeler
 `requestAF` avec elle-même en paramètre, comme vu dans l'exemple. Sinon, elle
@@ -812,6 +812,10 @@ prototype : endAnimate() -> void
 Le but de cette ultime fonction de la classe `Game` sera de rétablir toutes les
 valeurs du jeu dans un état cohérent (désélection de l'étage, remise à `null` de
 l'animation, ...). Une fois que tout est bon, elle pourra appeler `redraw`.
+
+Par contre, l'étage animé n'est pas dessiné (pour l'instant). Ajoutons l'appel à
+la fonction de dessin d'un layer animé dans redraw, si une animation est en
+cours.
 
 Nous n'avons plus qu'à appeler la fonction d'animation dans la fonction qui
 gère le clic de la souris, et... bah j'crois bien qu'on a fini.
