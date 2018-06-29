@@ -116,6 +116,9 @@ Game.prototype.redraw = function() {
     for (var j = 0; j < tower.layers.length; ++j)
       drawLayer(ctx, tower.layers[j], j);
   }
+
+  if (this.animation)
+    drawAnimatedLayer(ctx, this.selectedLayer, this.animation);
 }
 
 /* ACCESSORS */
@@ -207,6 +210,40 @@ Game.prototype.canSelectTower = function(tower) {
   return topLayer.size > this.selectedLayer.size;
 };
 
+/* ANIMATION */
+
+Game.prototype.animate = function(fromTower, toTower) {
+  var layer = fromTower.popLayer();
+  var game = this;
+
+  var anim = this.animation = {
+    fromTower: fromTower,
+    toTower: toTower,
+    step: 0,
+  };
+
+  function frame() {
+    anim.step += 0.01 * ANIMATION_SPEED;
+    game.redraw();
+
+    if (anim.step < 1)
+      requestAnimationFrame(frame);
+    else
+      game.endAnimate();
+  }
+
+  requestAnimationFrame(frame);
+}
+
+Game.prototype.endAnimate = function() {
+  this.animation.toTower.addLayer(this.selectedLayer);
+  this.selectedLayer.selected = false;
+  this.selectedLayer = null;
+  this.animation = null;
+
+  this.redraw();
+}
+
 /* EVENTS */
 
 /**
@@ -229,13 +266,7 @@ Game.prototype.onClick = function(e) {
       console.log('Layer unselected');
     }
   } else if (tower && this.canSelectTower(tower)) {
-    var fromTower = this.selectedLayer.tower;
-    var layer = fromTower.popLayer();
-
-    tower.addLayer(layer);
-    layer.selected = false;
-    this.selectedLayer = null;
-
+    this.animate(this.selectedLayer.tower, tower);
     console.log('Tower selected: position = ' + tower.position);
   }
 
