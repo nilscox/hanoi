@@ -617,8 +617,13 @@ l'initialisation !
 
 Pour jouer, l'utilisateur va devoir cliquer sur des parties du canvas, c'est
 donc à nous d'écouter l'event `onclick`, pour faire évoluer le jeu en
-conséquences. Pour ce faire, let's add a `onClick` method, sans oublier de la
+conséquence. Pour ce faire, let's add a `onClick` method, sans oublier de la
 binder correctement au listener du canvas (dans l'initialisation).
+
+```
+prototype : onClick(e: Event) -> void
+e         : le click event
+```
 
 Pour l'instant, notre but sera de changer l'attribut `selected` du layer
 lorsque l'on clic dessus, et de voir sa couleur changer. Cela implique que nous
@@ -645,9 +650,6 @@ this.getLayerAt(e.offsetX, e.offsetY)
 Après avoir sélectionné ou désélectionné un étage, il peut être pertinent de
 logger un message dans la console. Cela permettera de garder une trace des
 opérations effectuées.
-
-Pour voir le changement de couleur, il ne faudra pas oublier d'appeler
-`redraw`.
 
 Aussi, nous aurons besoin de garder une référence vers le layer sélectionné au
 cours du jeu. Ajoutons-le dans les attributs de la class `Game`.
@@ -689,19 +691,19 @@ retour    : la tour au point (x, y), ou null si aucune n'est trouvée
 
 Et pour pouvoir jouer une partie entière, il ne nous reste plus qu'à déplacer
 un étage d'une tour à l'autre. Dans le `onClick`, nous pouvons maintenant
-récupérer la tour au coordonées de la souris, et vérifier si elle peut être
-sélectionnée. Si c'est le cas, alors on peut passer l'étage sélectionné d'une
-tour à l'autre, et de réinitialiser la sélection.
+récupérer la tour au coordonées de la souris (en plus de l'étage), et vérifier
+si elle peut être sélectionnée. Si c'est le cas, alors on peut passer l'étage
+sélectionné d'une tour à l'autre, et de réinitialiser la sélection.
 
 La encore, un petit message de log serait le bienvenu.
 
 Pour alléger le code de cette fonction, il nous faudrait une méthode qui nous
-permette de retirer le dernier étage d'une tour (à placer dans la class
+permette de retirer le dernier étage d'une tour (à placer dans la classe
 `Tower`).
 
 ```
 prototype : popLayer() -> ?Layer
-retour    : Le dernier étage, ou null si la tour n'a pas d'étages
+retour    : le dernier étage, ou null si la tour n'a pas d'étages
 ```
 
 Plus que les animations, et notre jeu sera déjà pas trop mal.
