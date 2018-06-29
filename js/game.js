@@ -48,6 +48,19 @@ Tower.prototype.fill = function(n) {
     this.addLayer(new Layer(this, n - i));
 }
 
+/**
+ * Removes the tower's top layer
+ *
+ * @returns {Layer} - the top layer
+ */
+Tower.prototype.popLayer = function() {
+  var layer = this.layers.pop();
+
+  layer.tower = null;
+
+  return layer;
+};
+
 /** GAME */
 
 /**
@@ -61,6 +74,7 @@ function Game(root) {
   this.context = this.canvas.getContext('2d');
 
   this.towers = [];
+  this.selectedLayer = null;
 
 }
 
@@ -71,7 +85,9 @@ function Game(root) {
  */
 Game.prototype.initialize = function() {
   setDimensions(this.canvas.width, this.canvas.height);
+
   this.context.strokeStyle = '#00000099';
+  this.canvas.addEventListener('click', this.onClick.bind(this));
 
   for (var i = 0; i < 3; ++i)
     this.towers.push(new Tower(i));
@@ -101,3 +117,127 @@ Game.prototype.redraw = function() {
       drawLayer(ctx, tower.layers[j], j);
   }
 }
+
+/* ACCESSORS */
+
+/**
+ * Finds the layer at a given coordinate
+ *
+ * @param {number} x - the x coordinate
+ * @param {number} y - the y coordinate
+ * @returns {?Tower} - the layer which bounding box contains the point
+ *   coordinates, or `null` if no layer matches this point
+ */
+Game.prototype.getLayerAt = function(x, y) {
+  for (let i = 0; i < 3; ++i) {
+    var tower = this.towers[i];
+
+    for (let j = 0; j < tower.layers.length; ++j) {
+      var layer = tower.layers[j];
+      var layerRect = compute.layerRect(layer, j);
+
+      if (compute.inBounds({ x, y }, layerRect)) {
+        return layer;
+      }
+    }
+  }
+
+  return null;
+};
+
+/**
+ * Finds the layer at a given coordinate
+ *
+ * @param {number} x - the x coordinate
+ * @param {number} y - the y coordinate
+ * @returns {?Tower} - the layer which bounding box contains the point
+ *   coordinates, or `null` if no layer matches this point
+ */
+Game.prototype.getTowerAt = function(x, y) {
+  for (let i = 0; i < 3; ++i) {
+    var tower = this.towers[i];
+
+    var towerRect = compute.towerRect(tower);
+
+    if (compute.inBounds({ x, y }, towerRect)) {
+      return tower;
+    }
+  }
+
+  return null;
+};
+
+/* VALIDATION */
+
+/**
+ * Checks if the user can select a layer
+ *
+ * @param {Layer} layer - the layer to validate
+ * @returns {boolean} - true only if the user can select this layer
+ */
+Game.prototype.canSelectLayer = function(layer) {
+  if (this.selectedLayer)
+    return layer === this.selectedLayer;
+
+  var tower = layer.tower;
+
+  if (!tower)
+    return false;
+
+  var idx = tower.layers.indexOf(layer);
+
+  return idx === tower.layers.length - 1;
+}
+
+/**
+ * Checks if the user can select a tower
+ *
+ * @param {Tower} tower - the tower to validate
+ * @returns {boolean} - true if the user can select this tower
+ */
+Game.prototype.canSelectTower = function(tower) {
+  const topLayer = tower.layers[tower.layers.length - 1];
+
+  if (!this.selectedLayer || tower === this.selectedLayer.tower)
+    return false;
+
+  if (!topLayer)
+    return true;
+
+  return topLayer.size > this.selectedLayer.size;
+};
+
+/* EVENTS */
+
+/**
+ * Handles a canvas's onclick event
+ *
+ * @param {Event} e - the event
+ */
+Game.prototype.onClick = function(e) {
+  var layer = this.getLayerAt(e.offsetX, e.offsetY);
+  var tower = this.getTowerAt(e.offsetX, e.offsetY);
+
+  if (layer && this.canSelectLayer(layer)) {
+    layer.selected = !layer.selected;
+
+    if (layer.selected) {
+      this.selectedLayer = layer;
+      console.log('Layer selected: size = ' + layer.size);
+    } else {
+      this.selectedLayer = null;
+      console.log('Layer unselected');
+    }
+  } else if (tower && this.canSelectTower(tower)) {
+    var fromTower = this.selectedLayer.tower;
+    var layer = fromTower.popLayer();
+
+    tower.addLayer(layer);
+    layer.selected = false;
+    this.selectedLayer = null;
+
+    console.log('Tower selected: position = ' + tower.position);
+  }
+
+  this.redraw();
+};
