@@ -1,3 +1,4 @@
+var TOWER_COLOR = new Values('#666');
 var LAYERS_COLORS = buildColorPalette(TOWER_NB_LAYERS);
 var SELECTED_LAYER_COLOR = getRandomColor().tint(30);
 

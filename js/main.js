@@ -1,4 +1,8 @@
-const body = document.getElementsByTagName('body')[0];
-const root = document.getElementById('game');
+var root = document.getElementById('game');
 
-body.onload = () => new Game(root).initialize();
+document.body.onload = () => {
+  var game = new Game(root);
+
+  window.game = game;
+  game.initialize();
+};
