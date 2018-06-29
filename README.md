@@ -361,7 +361,7 @@ prototype : drawTower(tower: Tower)
 tower     : devine ?
 ```
 
-### Ca bouge !
+### Ça bouge !
 
 Le moment est venu pour commencer à parler d'animation... Nous reviendrons sur
 cette partie lors de l'implem du jeu lui-même, mais pour l'instant nous allons
@@ -434,14 +434,16 @@ Ce fichier contiendra bien sur toute la logique du jeu lui-même, et utilisera
 les fonctions de calcul et de dessin.
 
 Dans ce fichier, nous allons déclarer trois classes (hop, hop, hop... pas tout
-de suite, oh !), qui représenteront les étages, les tours et le jeu. Ces
-classes doivent être déclarées en mode "old school", avec des fonctions (et non
-pas avec le mot clé `class` des versions récentes de JavaScript).
+de suite, oh !), qui représenteront un étage, une tour et le jeu. Ces classes
+doivent être déclarées en mode "old school", avec des fonctions (et non pas
+avec le mot clé `class` des versions récentes de JavaScript).
 
 Une fonction se comporte comme le constructeur d'une classe en
 [POO](https://fr.wikipedia.org/wiki/Programmation_orient%C3%A9e_objet), et il
 est possible de lui ajouter des attributs et des méthodes via le mot clé
-`this`. Un bref exemple permettera de mieux comprendre :
+`this`. La définition de méthodes s'effectue via le
+[`prototype`](https://www.w3schools.com/js/js_object_prototypes.asp)).
+Un bref exemple permettera de mieux comprendre :
 
 ```js
 /* Beer class definition */
@@ -457,17 +459,16 @@ function Beer(name, degree) {
 
 /* methods */
 
-Beer.prototype.serve = (glass) => {
-  // ... do something with this ...
-};
+Beer.prototype.serve = function(glass) {
+  glass.wash();
+  glass.fill(this);
+}
 
-Beer.prototype.drink = (someone) => {
-  // ... do something with this ...
-};
+Beer.prototype.willIGetDrunk = function(nbBeers) {
+  console.log(this.degree);
+  return nbBeers * this.degree > 20;
+}
 ```
-
-La définition de méthodes s'effectue via le
-[`prototype`](https://www.w3schools.com/js/js_object_prototypes.asp)).
 
 > Attention ! si nous décidons de déclarer une fonction à l'intérieur de la
 > définition de la classe, alors le mot clé `this` fera référence à l'inner
@@ -479,7 +480,7 @@ Let's go?
 
 Et ouais, on commence par le gros morceau. la classe `Game` aura besoin d'un
 constructeur, qui se chargera d'initialiser les éléments dont l'instance du jeu
-aura besoin. On lui fournira en paramêtre l'élément du DOM dans lequel déssiner
+aura besoin. On lui fournira en argument l'élément du DOM dans lequel déssiner
 le jeu.
 
 ```
@@ -495,8 +496,7 @@ Le jeu va devoir afficher des dessins sur la page. Il aura donc besoin d'un
 canvas, qu'il pourra stocker dans ses attributs. Comme nous l'avons vu, les
 fonctions de dessin attendent, non pas un canvas, mais un context pour
 dessiner. Il serait ainsi plus sympa de stocker ce context directement dans
-les attributs, plutôt que d'aller le chercher dans le canvas. Ces deux
-attributs peuvent rester à null (pour le moment).
+les attributs, plutôt que d'aller le chercher dans le canvas.
 
 De plus, le jeu va avoir besoin d'un ensemble de tours. Le constructeur a
 simplement besoin d'enregistrer un tableau vide.
@@ -522,8 +522,8 @@ Ce code va simplement instancier un nouveau jeu, lorsque la page est prête.
 Enfin, pour faciliter le débug, voici un petit hack intéressant... La console
 de chrome peut accéder directement à tous les objets stockés dans
 [`window`](https://developer.mozilla.org/en-US/docs/Web/API/Window). Avec un
-simple `window.game = game`, il est possible d'accéder à l'instance à tout
-moment, d'appeler ses méthodes.... Bon débug !
+simple `window.game = game`, il est possible d'accéder à l'instance du jeu à
+tout moment, d'appeler ses méthodes.... Bon débug !
 
 ### Let's start
 
@@ -537,9 +537,7 @@ prototype : initialize() -> void
 Malgré son prototype relativement simple, cette fonction a pas mal de choses
 à faire.
 
-Premièrement, elle va devoir créer le canvas, et récupérer son context.
-
-Ensuite, elle va devoir appeler la fonction `setDimensions`, dans le but
+Premièrement, elle va devoir appeler la fonction `setDimensions`, dans le but
 d'informer le module de calcul de la taille du canvas (les informations de
 largeur et de hauteur sont disponibles dans le canvas lui-même).
 
@@ -549,7 +547,7 @@ informant que le jeu est prêt.
 
 ### Les étages et la tour
 
-Comme promis, nous avons, en plus de la class `Game`, les class `Tower` et
+Comme promis, nous avons, en plus de la class `Game`, les classes `Tower` et
 `Layer`. Allez, on fait les deux à la fois ?
 
 Bon, pour l'instant on ne va faire que les constructeurs hein. Et puis
@@ -564,7 +562,7 @@ size      : la taille du layer, à partir de 1
 ```
 
 La `Tower`, quant à elle, sera définie par une position ainsi qu'un ensemble de
-`Layer`.
+`Layer` (vide par défaut).
 
 ```
 prototype : Tower(position: number)
@@ -595,11 +593,18 @@ Maintenant qu'il est possible de créer des tours et de les remplir d'étages,
 nous pouvons compléter l'intialisation du jeu. Nous n'avons qu'à créer 3 tours,
 et à en remplir une au hasard.
 
+> Note : comme annoncé dans la partie concernant les fonctions de dessin, nous
+> allons set la couleur de trait à #00000099. Cela peut être fait pendant
+> l'initialisation.
+
 ### Des seins
 
-Une des fonction coeur du système est la fonction de dessin du jeu. Elle va
-tout d'abord effacer tout le canvas, pour dessiner une nouvelle *frame*.
-Ensuite, elle pourra dessiner tous les éléments du jeu.
+Pour l'instant, sauf dans la console, nous ne pouvons pas tester les fonction du
+jeu déjà codées.
+
+Une des fonction coeur du système est celle de dessin du jeu. Elle va tout
+d'abord effacer tout le canvas, pour dessiner une nouvelle *frame*, c'est à dire
+dessiner tous les éléments du jeu (les tours et les étages).
 
 ```
 prototype : redraw() -> void
