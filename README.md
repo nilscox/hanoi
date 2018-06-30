@@ -14,30 +14,29 @@ et réussir ce sujet.
 
 Lorsque j'ai commencé la programmation (en C à l'époque), j'avais souvent besoin
 de cas pratiques pour mettre en application les notion que j'avais appris. Il me
-manquait souvent un "petit projet", me permettant de revoir les notions que
-j'avais appris, et de comprendre comment le code peut être conçu, designé,
-architecturé dans le développement d'un projet "réel".
+manquait souvent un "petit projet", me permettant de revoir les choses
+élémentaires et de comprendre comment le code peut être conçu, designé,
+architecturé dans le développement d'un projet à plus grande échelle.
 
-L'objectif de cet exercice est d'une part de manipuler les outils de base
-disponibles en JS, mais aussi de comprendre la mise en place du code, comment
-les éléments vont être ammenés à intéragir les uns avec les autres, et même plus
-généralement comment architecturer un projet, même assez simple comme les tours
-de Hanoï.
+L'objectif de cet exercice est d'une part de manipuler les fonctionnalités de
+base disponibles en JS, mais aussi de comprendre la mise en place du code,
+comment les éléments vont être amenés à intéragir les uns avec les autres, et
+même plus généralement comment architecturer un projet, même assez simple comme
+les tours de Hanoï.
 
 Le sujet va tenter de donner les lignes directrices pour savoir comment avancer,
-tout en ayant au maximum la possibilité de tester les fonctions à écrire.
+tout en ayant au maximum la possibilité de tester les fonctions écrites.
 L'architecture est donc presque entièrement donnée. Pour donner un ordre d'idée,
-la réf fait un peu moins de 400 lignes, répartient dans un peu plus de 20
+la réf fait un peu moins de 400 lignes, réparties dans un peu plus de 20
 fonctions. Les fonctions à réaliser ne sont jamais très longues, quelques lignes
-en moyenne (la fonction la plus longue fait 19 lignes, en comptant les lignes
-vides).
+en moyenne (la plus longue en a 13, sans compter les lignes vides).
 
-Trois grandes parties composent ce sujet. Et plus de cette introduction, qui
+Trois grandes parties composent ce sujet. En plus de cette introduction, qui
 donnera déjà quelques éléments important pour bien appréhender la suite, nous
-verrons le "module de calculs" du jeu, puis nous allons commencer par les fonctions de
-dessin, pour terminer par le code du jeu lui-même. Une 5ème partie, optionnelle
-et non corrigée, proposera l'implémentation d'un algorithme de résolution du
-problème des tours de Hanoï.
+verrons le "module de calculs" du jeu (fourni), puis nous allons commencer à
+coder les fonctions de dessin, pour terminer par le code du jeu lui-même. Une
+4ème partie, optionnelle et non corrigée, proposera l'implémentation d'un
+algorithme de résolution du problème des tours de Hanoï.
 
 ### Code style
 
@@ -48,10 +47,9 @@ plus pour le côté "déco" (petites animations, validation des formulaires, ...
 
 Depuis, les choses ont bien changé car on retrouve du code JavaScript pour, par
 exemple, des analytics, du tracking, des interfaces web complexes, et même côté
-serveur... Depuis sa première version, la syntaxe de langage et les
-performances des interprêteurs ont bien changé, donnant des raccourcis très
-pratiques pour les développeurs (arrow functions, le mot-clé `class`, async /
-await, ...).
+serveur. Depuis sa première version, la syntaxe du langage et les performances
+des interprêteurs ont bien changés, donnant des raccourcis très pratiques pour
+les développeurs (arrow functions, le mot-clé `class`, async / await, ...).
 
 Le but de cet exercice n'est pas de découvrir ces fonctionalités nouvelles et
 formidables, mais plutôt de mieux appréhender et être à l'aise avec une
@@ -77,9 +75,9 @@ ce fichier auquel on pourra accéder statiquement pour tester le jeu (sur le
 navigateur, via `file:///home/you/some/path/hanoi/index.html`). Il inclue déjà
 quelques styles CSS pour un affichage minimal, et link les quelques scripts
 fourni. De plus, il définit une `div` avec l'id `game`, qui est l'élément dans
-lequel nous afficherons le jeu.
+lequel nous afficherons le jeu (à garder).
 
-Ensuite, nous avons deux fichiers de styles CSS : `css/reset.css` et
+Ensuite, nous avons deux fichiers de styles : `css/reset.css` et
 `css/styles.css`. Ce second fichier est très peu fourni, et met en place une
 interface très simple, mais juste assez pour afficher le jeu dans une page web.
 
@@ -91,13 +89,13 @@ racine du projet.
 
 ### Constants
 
-Certaines valeurs du jeu sont choisi arbitrairement. Par exemple, les
-dimensions du jeu, le nombre d'étages de la tour... Ces valeurs sont définies
-dans un fichier séparé déjà fourni : `js/constants.js`. Des valeurs par défaut
-sont déjà données à titre d'exemple, mais il est tout à fait possible, et même
-encouragé de changer ces valeurs, et voir ce que ça donne...
+Certaines valeurs du jeu sont choisi arbitrairement. Par exemple, l'espacement
+entre les tours, le nombre d'étages, la vitesse d'animation... Ces valeurs sont
+définies dans le fichier `js/constants.js`. Des valeurs par défaut sont déjà
+données à titre d'exemple, mais il est tout à fait possible, et même encouragé
+de changer ces valeurs, et voir ce que ça donne.
 
-Le but d'extraire ces constantes dans un fichier unique, et d'une part d'être
+Le but d'extraire ces constantes dans un fichier unique est d'une part pour être
 capable de partager ces valeurs dans les différents fichiers, mais aussi
 d'éviter les "magic values", les valeurs en dur dans le code. De plus, s'il est
 nécéssaire de changer l'une de ces valeurs, cela peut être fait en ne touchant
@@ -106,17 +104,15 @@ toutes les constantes utilisées.
 
 ```
 TOWER_NB_LAYERS : le nombre total d'étages
-GAME_WIDTH : la largeur du jeu
-GAME_HEIGHT : la hauteur du jeu
-GAME_SPACING : l'espacement entre les bords et les éléments du jeu
-TOP_SPACING : l'espacement entre le bord haut du jeu et le haut des tours
+GAME_SPACING : l'espacement entre les bords du canvas et les éléments du jeu
+TOP_SPACING : l'espacement entre le bord haut du canvas et le haut des tours
 TOWER_SPACING : l'espacement entre les tours
 POLE_WIDTH : la largeur de la barre centrale d'une tour
 BASE_HEIGHT : la hauteur du la base d'une tour
 LAYER_HEIGHT : la hauteur d'un étage
 LAYER_SPACING : l'espacement entre deux étages
 LAYER_MIN_WIDTH : la largeur du plus petit étage
-LAYER_ANIMATION_SPACING : l'espacement entre un layer en transition et le bord haut du jeu
+LAYER_ANIMATION_SPACING : l'espacement entre un layer en transition et le bord haut du canvas
 ANIMATION_SPEED : la vitesse d'animation d'un étage entre deux tours
 ```
 
@@ -335,8 +331,10 @@ propriétés `width` et `height` de l'élément, et finalement insérer le
 canvas dans le dom.
 
 ```
-prototype : createCanvas(root: HTMLNode) -> HTMLNode
+prototype : createCanvas(root: HTMLNode, width: number, height: number) -> HTMLNode
 root      : l'élément HTML dans lequel le canvas doit être inséré
+width     : la largeur du canvas (en px)
+height    : la hauteur du canvas (en px)
 retour    : l'élément HTML canvas
 ```
 
@@ -577,6 +575,8 @@ les attributs, plutôt que d'aller le chercher dans le canvas.
 
 De plus, le jeu va avoir besoin d'un ensemble de tours. Le constructeur a
 simplement besoin d'enregistrer un tableau vide.
+
+> Note : les dimensions du canvas dans réf sont 620x280.
 
 ### int main(void);
 
