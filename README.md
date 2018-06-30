@@ -199,7 +199,8 @@ for (let i = 0; i < 10; ++i) {
 
 Nous pouvons voir qu'il est possible de créer une instance de Values en passant
 une couleur sous forme de string hexadécimale à son constructeur. Il est aussi
-possible de lui donner couleur sous forme de string rgb (`rgb(200, 80, 130)`).
+possible de lui donner une couleur sous forme de string rgb ( par exemple,
+`rgb(200, 80, 130)`).
 
 Pour convertir l'instance de `Values` en couleur sous forme de string, il est
 possible d'appeler sa méthode `hexString()`. Par contre, si la valeur donnée au
@@ -265,12 +266,11 @@ type `Rect`. Les fonctions suivantes permettent de calculer les positions et
 dimensions d'un objet du jeu, de manière à l'afficher au bon endroit, ou bien
 de calculer les éléments séléctionnés par la souris.
 
-- `poleRect(tower) -> Rect`: calcul le rect de la barre centrale d'une tour
-- `baseRect(tower) -> Rect`: calcul le rect de la base d'une tour
-- `towerRect(tower) -> Rect`: calcul le rect d'une tour
-- `layerRect(layer, pos) -> Rect`: calcul le rect du layer d'une tour
-- `animatiedLayerRect(layer, animation) -> Rect`: calcul le rect d'un layer en
-  transition entre deux tours
+- `poleRect(tower: Tower) -> Rect` : calcul le rect de la barre centrale d'une tour
+- `baseRect(tower: Tower) -> Rect` : calcul le rect de la base d'une tour
+- `towerRect(tower: Tower) -> Rect` : calcul le rect d'une tour
+- `layerRect(layer: Layer, pos: number) -> Rect` : calcul le rect du layer d'une tour
+- `animatiedLayerRect(layer: Layer, animation: Animation) -> Rect` : calcul le rect d'un layer en transition entre deux tours
 
 L'argument `pos` de la fonction `layerRect` correspond à la position de l'étage
 dans la tour à laquelle elle est attachée.
