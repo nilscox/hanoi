@@ -65,6 +65,30 @@ qui est expliqué dans ce sujet est réalisable dans n'importe quel version de
 JavaScript, et même dans n'importe quel langage de programmation. Le choix reste
 donc libre, bien qu'il soit plus intéressant, à mon sens, de le faire en ES5.
 
+### Mise en place
+
+Quelques fichiers sont déjà donnés, nous allons voir rapidement comment
+s'insérer dans cette codebase. Tout ce qui est indiqué dans ce sujet n'est donné
+qu'à titre indicatif. N'importe quel fichier peut être modifié, déplacé, rennomé
+comme l'on veut, l'important est de terminer avec quelque chose qui marche.
+
+Premièrement, le fichier `index.html` est le point d'entrée du programme. C'est
+ce fichier auquel on pourra accéder statiquement pour tester le jeu (sur le
+navigateur, via `file:///home/you/some/path/hanoi/index.html`). Il inclue déjà
+quelques styles CSS pour un affichage minimal, et link les quelques scripts
+fourni. De plus, il définit une `div` avec l'id `game`, qui est l'élément dans
+lequel nous afficherons le jeu.
+
+Ensuite, nous avons deux fichiers de styles CSS : `css/reset.css` et
+`css/styles.css`. Ce second fichier est très peu fourni, et met en place une
+interface très simple, mais juste assez pour afficher le jeu dans une page web.
+
+Enfin, deux fichiers JS sont déjà présents : `js/compute.js` et
+`js/constants.js`. Nous reviendrons très vite sur leur utilité.
+
+Tous les chemins de fichier sont référencés relativement au dossier `hanoi`,
+racine du projet.
+
 ### Constants
 
 Certaines valeurs du jeu sont choisi arbitrairement. Par exemple, les
@@ -190,11 +214,6 @@ pour le débug).
 Enfin, la dernière méthode de `Values` dont nous aurons besoin permet
 d'assombrir une couleur. Cette méthode est `shade(number)`. La valeur passée en
 paramètre est le pourcentage d'assombrissement entre `0` et `100`.
-
-### Tips
-
-Pour dessiner, nous allons utiliser le `<canvas>` HTML. Ce n'est pas
-nécéssaire, mais ça peut être pas mal de voir un peu comment ça marche.
 
 ## Partie 0 : Calculer
 
