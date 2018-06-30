@@ -178,9 +178,9 @@ structures de données (des classes), seront à faire plus tard. No spoil.
 
 La seule et unique bibliothèque utilisée dans le projet est
 [values.js](https://github.com/noeldelgado/values.js). Elle permet de manipuler
-simplement des couleurs, et de le décliner en ajoutant du blanc et du noir, ce
-qui permet de créer facilement des dégradés. Toutes les couleurs utilisées dans
-le jeu seront donc des objet de type `Values`.
+simplement des couleurs, et de les décliner en y ajoutant du blanc et du noir,
+ce qui nous permettra de créer facilement des dégradés. Toutes les couleurs
+utilisées dans le jeu seront donc des objet de type `Values`.
 
 Voici un petit exemple d'utilisation de cette bibliothèque.
 
