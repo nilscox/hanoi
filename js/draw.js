@@ -36,13 +36,15 @@ function buildColorPalette(n) {
  * Creates a <canvas> element
  *
  * @param {HTMLNode} root - the element in which the canvas will be inserted
+ * @param {number} width - the canvas width
+ * @param {number} height - the canwas height
  * @returns {HTMLNode} - the created canvas
  */
-function createCanvas(root) {
+function createCanvas(root, width, height) {
   var canvas = document.createElement('canvas');
 
-  canvas.width = GAME_WIDTH;
-  canvas.height = GAME_HEIGHT;
+  canvas.width = width;
+  canvas.height = height;
 
   root.appendChild(canvas);
 

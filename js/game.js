@@ -70,7 +70,7 @@ Tower.prototype.popLayer = function() {
  */
 function Game(root) {
 
-  this.canvas = createCanvas(root);
+  this.canvas = createCanvas(root, 620, 280);
   this.context = this.canvas.getContext('2d');
 
   this.towers = [];
