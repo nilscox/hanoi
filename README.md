@@ -5,7 +5,65 @@ Hanoï](https://fr.wikipedia.org/wiki/Tours_de_Hano%C3%AF).
 
 ## Introduction
 
+Cet exercice s'adresse à toute personne ayant déjà quelques notions en
+programmation (et plus particulièrement en JavaScript), et propose un cas
+pratique de conception d'un jeu *from scratch*. Il est préférable d'avoir au
+moins les notions de conditions, de boucles, de fonctions... mais ce n'est pas
+nécéssaire de très bien maîtriser toutes les notions du JS pour bien comprendre
+et réussir ce sujet.
+
+Lorsque j'ai commencé la programmation (en C à l'époque), j'avais souvent besoin
+de cas pratiques pour mettre en application les notion que j'avais appris. Il me
+manquait souvent un "petit projet", me permettant de revoir les notions que
+j'avais appris, et de comprendre comment le code peut être conçu, designé,
+architecturé dans le développement d'un projet "réel".
+
+L'objectif de cet exercice est d'une part de manipuler les outils de base
+disponibles en JS, mais aussi de comprendre la mise en place du code, comment
+les éléments vont être ammenés à intéragir les uns avec les autres, et même plus
+généralement comment architecturer un projet, même assez simple comme les tours
+de Hanoï.
+
+Le sujet va tenter de donner les lignes directrices pour savoir comment avancer,
+tout en ayant au maximum la possibilité de tester les fonctions à écrire.
+L'architecture est donc presque entièrement donnée. Pour donner un ordre d'idée,
+la réf fait un peu moins de 400 lignes, répartient dans un peu plus de 20
+fonctions. Les fonctions à réaliser ne sont jamais très longues, quelques lignes
+en moyenne (la fonction la plus longue fait 19 lignes, en comptant les lignes
+vides).
+
+Trois grandes parties composent ce sujet. Et plus de cette introduction, qui
+donnera déjà quelques éléments important pour bien appréhender la suite, nous
+verrons le "module de calculs" du jeu, puis nous allons commencer par les fonctions de
+dessin, pour terminer par le code du jeu lui-même. Une 5ème partie, optionnelle
+et non corrigée, proposera l'implémentation d'un algorithme de résolution du
+problème des tours de Hanoï.
+
 ### Code style
+
+Le JavaScript est et a été depuis quelques années en constante évolution.
+Initialement conçu par Brendan Eich en 1995 pour le navigateur Netscape, le JS
+était beaucoup utilisé pour ajouter une partie dynamique aux pages web, souvent
+plus pour le côté "déco" (petites animations, validation des formulaires, ...).
+
+Depuis, les choses ont bien changé car on retrouve du code JavaScript pour, par
+exemple, des analytics, du tracking, des interfaces web complexes, et même côté
+serveur... Depuis sa première version, la syntaxe de langage et les
+performances des interprêteurs ont bien changé, donnant des raccourcis très
+pratiques pour les développeurs (arrow functions, le mot-clé `class`, async /
+await, ...).
+
+Le but de cet exercice n'est pas de découvrir ces fonctionalités nouvelles et
+formidables, mais plutôt de mieux appréhender et être à l'aise avec une
+codebase un peu ancienne, parce que bah.. à la base, le JS c'est ça quoi. Et
+c'est bien de pouvoir le lire et le comprendre ! Pour ça, rien de mieux que la
+pratique.
+
+La correction est faite pour fonctionner en ES5. Plus de détails seront donnés
+lors du développement du jeu sur certains points de syntaxe. Bien sur, tout ce
+qui est expliqué dans ce sujet est réalisable dans n'importe quel version de
+JavaScript, et même dans n'importe quel langage de programmation. Le choix reste
+donc libre, bien qu'il soit plus intéressant, à mon sens, de le faire en ES5.
 
 ### Constants
 
@@ -821,3 +879,15 @@ Nous n'avons plus qu'à appeler la fonction d'animation dans la fonction qui
 gère le clic de la souris, et... bah j'crois bien qu'on a fini.
 
 ## Partie 3 : Résoudre
+
+Pour aller plus loin, je propose cette troisième partie, dont le but sera de
+proposer une implémentation de la résolution du jeu. L'objectif est de voir le
+jeu avancer tout seul, via un algorithme qui décide comment déplacer les étages
+d'une tour à une autre en respectant les règles de base.
+
+L'algo de résolution existe déjà et est présent et trouvable très rapidement sur
+le net (sur la page wiki des tours de Hanoï il me semble), mais le but de cette
+partie est de le trouver sans regarder la solution.
+
+La résolution n'est pas présente dans la réf, l'implémentation est totallement
+libre. Bonne chance :).
