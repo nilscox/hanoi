@@ -146,8 +146,8 @@ les dimensions du rectangle (`width` et `height`).
 Enfin, mais c'est pas pour tout de suite, certains objets seront animés. Pour
 représenter une animation, nous utiliserons une fois de plus un objet, avec
 cette fois trois propriétés : la tour de départ de l'étage en transition, la
-tour d'arrivée, l'étage lui-même et le pourcentage d'avancement de la
-transition (un nombre entre `0` et `1`).
+tour d'arrivée, et le pourcentage d'avancement de la transition (un nombre
+entre `0` et `1`).
 
 Si on récapépèt, on a :
 
