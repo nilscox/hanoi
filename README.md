@@ -374,7 +374,8 @@ Pour donner un effet un peu moins "flat" à notre jeu, nous allons aussi
 dessiner les contours de chaque rectangle.
 
 ```
-prototype : drawRect(rect: Rect, fill: Values) -> void
+prototype : drawRect(ctx: Contex2D, rect: Rect, fill: Values) -> void
+ctx       : le context du canvas
 rect      : les coordonnées et dimensions du rectangle à dessiner
 fill      : la couleur du rectangle
 ```
@@ -399,7 +400,8 @@ Premier vrai élément du jeu à afficher : un étage de la tour. C'est simpleme
 un rectangle, dont les couleurs viennent des constantes préalablement définies.
 
 ```
-prototype : drawLayer(layer: Layer, i: number) -> void
+prototype : drawLayer(ctx: Context2D, layer: Layer, i: number) -> void
+ctx       : le context du canvas
 layer     : l'étage à dessiner
 i         : la position de l'étage dans la tour
 ```
@@ -432,7 +434,8 @@ for (let i = 0; i < TOWER_NB_LAYERS; ++i) {
 Maintenant que nous pouvons afficher un étage, c'est au tour de la tour (haha).
 
 ```
-prototype : drawTower(tower: Tower)
+prototype : drawTower(ctx: Context2D, tower: Tower)
+ctx       : le context du canvas
 tower     : devine ?
 ```
 
@@ -444,7 +447,8 @@ nous concentrer sur la fonction de dessin d'un étage de la tour à un certain
 moment d'une animation.
 
 ```
-prototype : drawAnimatedLayer(layer: Layer, animation: Animation)
+prototype : drawAnimatedLayer(ctx: Context2D, layer: Layer, animation: Animation)
+ctx       : le context du canvas
 layer     : l'étage en transition
 animation : l'animation
 ```
