@@ -212,7 +212,7 @@ Game.prototype.canSelectTower = function(tower) {
 
 /* ANIMATION */
 
-Game.prototype.animate = function(fromTower, toTower) {
+Game.prototype.animate = function(fromTower, toTower, cb) {
   var layer = fromTower.popLayer();
   var game = this;
 
@@ -229,19 +229,22 @@ Game.prototype.animate = function(fromTower, toTower) {
     if (anim.step < 1)
       requestAnimationFrame(frame);
     else
-      game.endAnimate();
+      game.endAnimate(cb);
   }
 
   requestAnimationFrame(frame);
 }
 
-Game.prototype.endAnimate = function() {
+Game.prototype.endAnimate = function(cb) {
   this.animation.toTower.addLayer(this.selectedLayer);
   this.selectedLayer.selected = false;
   this.selectedLayer = null;
   this.animation = null;
 
   this.redraw();
+
+  if (cb)
+    cb();
 }
 
 /* EVENTS */
@@ -272,3 +275,40 @@ Game.prototype.onClick = function(e) {
 
   this.redraw();
 };
+
+/* SOLVE */
+
+Game.prototype.solve = function(pos) {
+  var game = this;
+
+  function move(n, source, dest, aux) {
+    if (n <= 0)
+      return Promise.resolve();
+
+    return move(n - 1, source, aux, dest)
+      .then(() => {
+        return new Promise(function(resolve) {
+          game.selectedLayer = source.layers[source.layers.length - 1];
+          console.log('move ' + source.position, ' -> ' + dest.position);
+          game.animate(source, dest, () => setTimeout(resolve, 50));
+        });
+      })
+      .then(() => {
+        return move(n - 1, aux, dest, source);
+      });
+
+  }
+
+  var source = this.towers.find(t => t.layers.length > 0);
+  var dest = this.towers.find(t => t.position === pos);
+  var aux = this.towers.find(t => t !== source && t !== dest);
+
+  console.log('source', source);
+  console.log('dest', dest);
+  console.log('aux', aux);
+
+  if (source !== dest) {
+    move(TOWER_NB_LAYERS, source, dest, aux)
+      .then(() => console.log('solved!'));
+  }
+}
