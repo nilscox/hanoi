@@ -217,8 +217,10 @@ Game.prototype.canSelectTower = function(tower) {
  *
  * @param {Tower} fromTower - the tower for which the layer animates from
  * @param {Tower} toTower - the tower for which the layer animates to
+ * @returns {Promise<void>} - a promise that resolves when the animation is
+ *   terminated
  */
-Game.prototype.animate = function(fromTower, toTower, cb) {
+Game.prototype.animate = function(fromTower, toTower) {
   var layer = fromTower.popLayer();
   var game = this;
 
@@ -228,32 +230,33 @@ Game.prototype.animate = function(fromTower, toTower, cb) {
     step: 0,
   };
 
-  function frame() {
-    anim.step += 0.01 * ANIMATION_SPEED;
-    game.redraw();
+  return new Promise(function(resolve) {
+    function frame() {
+      anim.step += 0.01 * ANIMATION_SPEED;
+      game.redraw();
 
-    if (anim.step < 1)
-      requestAnimationFrame(frame);
-    else
-      game.endAnimate(cb);
-  }
+      if (anim.step < 1)
+        requestAnimationFrame(frame);
+      else {
+        game.endAnimate();
+        resolve();
+      }
+    }
 
-  requestAnimationFrame(frame);
+    requestAnimationFrame(frame);
+  });
 }
 
 /**
  * Ends the layer animation
  */
-Game.prototype.endAnimate = function(cb) {
+Game.prototype.endAnimate = function() {
   this.animation.toTower.addLayer(this.selectedLayer);
   this.selectedLayer.selected = false;
   this.selectedLayer = null;
   this.animation = null;
 
   this.redraw();
-
-  if (cb)
-    cb();
 }
 
 /* EVENTS */
@@ -287,6 +290,12 @@ Game.prototype.onClick = function(e) {
 
 /* SOLVE */
 
+/**
+ * Solves the puzzle with a recursive function
+ *
+ * @params {number} pos - the destination tower's position
+ * @returns {Promise<void>} - a promise that resolves when the puzzle is solved
+ */
 Game.prototype.solve = function(pos) {
   var game = this;
 
@@ -295,29 +304,29 @@ Game.prototype.solve = function(pos) {
       return Promise.resolve();
 
     return move(n - 1, source, aux, dest)
-      .then(() => {
-        return new Promise(function(resolve) {
-          game.selectedLayer = source.layers[source.layers.length - 1];
-          console.log('move ' + source.position, ' -> ' + dest.position);
-          game.animate(source, dest, () => setTimeout(resolve, 50));
-        });
+      .then(function() {
+        console.log('move ' + source.position, ' -> ' + dest.position);
+        game.selectedLayer = source.layers[source.layers.length - 1];
+
+        return game.animate(source, dest);
       })
-      .then(() => {
-        return move(n - 1, aux, dest, source);
-      });
-
+      .then(function() { return move(n - 1, aux, dest, source); });
   }
 
-  var source = this.towers.find(t => t.layers.length > 0);
-  var dest = this.towers.find(t => t.position === pos);
-  var aux = this.towers.find(t => t !== source && t !== dest);
+  var source = this.towers.find(function(t) { return t.layers.length > 0; });
+  var dest = this.towers.find(function(t) { return t.position === pos; });
+  var aux = this.towers.find(function(t) { return t !== source && t !== dest; });
 
-  console.log('source', source);
-  console.log('dest', dest);
-  console.log('aux', aux);
+  console.log([
+    'solving',
+    'from', source.position,
+    'to', dest.position,
+    'using', aux.position,
+  ].join(' '));
 
-  if (source !== dest) {
-    move(TOWER_NB_LAYERS, source, dest, aux)
-      .then(() => console.log('solved!'));
-  }
+  if (source === dest)
+    return Promise.resolve();
+
+  return move(TOWER_NB_LAYERS, source, dest, aux)
+    .then(function() { console.log('solved!'); });
 }
