@@ -75,7 +75,7 @@ function drawRect(ctx, r, fill) {
  * @param {number} i - the layer's position in the tower
  */
 function drawLayer(ctx, layer, i) {
-  let color = LAYERS_COLORS[layer.size - 1];
+  var color = LAYERS_COLORS[layer.size - 1];
 
   if (layer.selected) {
     color = SELECTED_LAYER_COLOR;
