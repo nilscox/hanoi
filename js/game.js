@@ -132,10 +132,10 @@ Game.prototype.redraw = function() {
  *   coordinates, or `null` if no layer matches this point
  */
 Game.prototype.getLayerAt = function(x, y) {
-  for (let i = 0; i < 3; ++i) {
+  for (var i = 0; i < 3; ++i) {
     var tower = this.towers[i];
 
-    for (let j = 0; j < tower.layers.length; ++j) {
+    for (var j = 0; j < tower.layers.length; ++j) {
       var layer = tower.layers[j];
       var layerRect = compute.layerRect(layer, j);
 
@@ -157,7 +157,7 @@ Game.prototype.getLayerAt = function(x, y) {
  *   coordinates, or `null` if no layer matches this point
  */
 Game.prototype.getTowerAt = function(x, y) {
-  for (let i = 0; i < 3; ++i) {
+  for (var i = 0; i < 3; ++i) {
     var tower = this.towers[i];
 
     var towerRect = compute.towerRect(tower);
@@ -199,7 +199,7 @@ Game.prototype.canSelectLayer = function(layer) {
  * @returns {boolean} - true if the user can select this tower
  */
 Game.prototype.canSelectTower = function(tower) {
-  const topLayer = tower.layers[tower.layers.length - 1];
+  var topLayer = tower.layers[tower.layers.length - 1];
 
   if (!this.selectedLayer || tower === this.selectedLayer.tower)
     return false;
@@ -212,6 +212,12 @@ Game.prototype.canSelectTower = function(tower) {
 
 /* ANIMATION */
 
+/**
+ * Animates a layer from a tower to another
+ *
+ * @param {Tower} fromTower - the tower for which the layer animates from
+ * @param {Tower} toTower - the tower for which the layer animates to
+ */
 Game.prototype.animate = function(fromTower, toTower, cb) {
   var layer = fromTower.popLayer();
   var game = this;
@@ -235,6 +241,9 @@ Game.prototype.animate = function(fromTower, toTower, cb) {
   requestAnimationFrame(frame);
 }
 
+/**
+ * Ends the layer animation
+ */
 Game.prototype.endAnimate = function(cb) {
   this.animation.toTower.addLayer(this.selectedLayer);
   this.selectedLayer.selected = false;
